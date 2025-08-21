@@ -5,6 +5,7 @@ namespace Gigerit\PostcardApi;
 use Gigerit\PostcardApi\Connectors\SwissPostConnector;
 use Gigerit\PostcardApi\Services\BrandingService;
 use Gigerit\PostcardApi\Services\CampaignService;
+use Gigerit\PostcardApi\Services\OAuth2Service;
 use Gigerit\PostcardApi\Services\PostcardService;
 
 class PostcardApi
@@ -15,17 +16,7 @@ class PostcardApi
     {
         $this->connector = new SwissPostConnector;
 
-        if ($accessToken) {
-            $this->connector = $this->connector->withOAuth2Token($accessToken);
-        } else {
-            // Auto-authenticate using OAuth2 if credentials are configured
-            try {
-                $this->connector = $this->connector->withOAuth2();
-            } catch (\Exception $e) {
-                // If OAuth2 fails, continue without authentication
-                // This allows the package to work even without proper configuration
-            }
-        }
+        $this->connector = $this->connector->withOAuth2Token($accessToken ?? OAuth2Service::getAccessToken());
     }
 
     /**

@@ -20,7 +20,7 @@ class OAuth2Service
     /**
      * Get an access token using direct HTTP request (bypassing Saloon OAuth for compatibility)
      */
-    public function getAccessToken(): string
+    public static function getAccessToken(): string
     {
         $cacheKey = 'swiss_post_postcard_api_oauth2_token';
 
