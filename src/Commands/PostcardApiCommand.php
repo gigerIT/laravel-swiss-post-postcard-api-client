@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace Gigerit\PostcardApi\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class PostcardApiCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'laravel-swiss-post-postcard-api-client';
 
     public $description = 'My command';
 
