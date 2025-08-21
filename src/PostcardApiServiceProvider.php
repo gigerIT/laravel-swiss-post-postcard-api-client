@@ -2,9 +2,13 @@
 
 namespace Gigerit\PostcardApi;
 
+use Gigerit\PostcardApi\Commands\PostcardApiCommand;
+use Gigerit\PostcardApi\Connectors\SwissPostConnector;
+use Gigerit\PostcardApi\Services\BrandingService;
+use Gigerit\PostcardApi\Services\CampaignService;
+use Gigerit\PostcardApi\Services\PostcardService;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Gigerit\PostcardApi\Commands\PostcardApiCommand;
 
 class PostcardApiServiceProvider extends PackageServiceProvider
 {
@@ -17,9 +21,33 @@ class PostcardApiServiceProvider extends PackageServiceProvider
          */
         $package
             ->name('laravel-swiss-post-postcard-api-client')
-            ->hasConfigFile()
-            ->hasViews()
-            ->hasMigration('create_laravel_swiss_post_postcard_api_client_table')
+            ->hasConfigFile('swiss-post-postcard-api-client')
             ->hasCommand(PostcardApiCommand::class);
+    }
+
+    public function packageRegistered(): void
+    {
+        // Register the main PostcardApi class as a singleton
+        $this->app->singleton(PostcardApi::class, function () {
+            return new PostcardApi;
+        });
+
+        // Register the connector as a singleton
+        $this->app->singleton(SwissPostConnector::class, function () {
+            return new SwissPostConnector;
+        });
+
+        // Register services
+        $this->app->singleton(PostcardService::class, function ($app) {
+            return new PostcardService($app->make(SwissPostConnector::class));
+        });
+
+        $this->app->singleton(BrandingService::class, function ($app) {
+            return new BrandingService($app->make(SwissPostConnector::class));
+        });
+
+        $this->app->singleton(CampaignService::class, function ($app) {
+            return new CampaignService($app->make(SwissPostConnector::class));
+        });
     }
 }
