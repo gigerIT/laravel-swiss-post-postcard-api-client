@@ -21,7 +21,7 @@ describe('OAuth2Service', function () {
 
     describe('getAccessToken', function () {
         it('returns cached token when available', function () {
-            Cache::put('swiss_post_oauth2_token', 'cached-token', now()->addHour());
+            Cache::put('swiss_post_postcard_api_oauth2_token', 'cached-token', now()->addHour());
 
             $token = $this->service->getAccessToken();
 
@@ -39,7 +39,7 @@ describe('OAuth2Service', function () {
             $token = $this->service->getAccessToken();
 
             expect($token)->toBe('test-access-token-123');
-            expect(Cache::has('swiss_post_oauth2_token'))->toBeTrue();
+            expect(Cache::has('swiss_post_postcard_api_oauth2_token'))->toBeTrue();
         });
 
         it('caches token with proper expiry', function () {
@@ -53,7 +53,7 @@ describe('OAuth2Service', function () {
             expect($token)->toBe('test-access-token-123');
 
             // Token should be cached
-            $cachedToken = Cache::get('swiss_post_oauth2_token');
+            $cachedToken = Cache::get('swiss_post_postcard_api_oauth2_token');
             expect($cachedToken)->toBe('test-access-token-123');
         });
 
@@ -98,13 +98,13 @@ describe('OAuth2Service', function () {
 
     describe('clearToken', function () {
         it('clears cached token', function () {
-            Cache::put('swiss_post_oauth2_token', 'test-token', now()->addHour());
+            Cache::put('swiss_post_postcard_api_oauth2_token', 'test-token', now()->addHour());
 
-            expect(Cache::has('swiss_post_oauth2_token'))->toBeTrue();
+            expect(Cache::has('swiss_post_postcard_api_oauth2_token'))->toBeTrue();
 
             $this->service->clearToken();
 
-            expect(Cache::has('swiss_post_oauth2_token'))->toBeFalse();
+            expect(Cache::has('swiss_post_postcard_api_oauth2_token'))->toBeFalse();
         });
     });
 

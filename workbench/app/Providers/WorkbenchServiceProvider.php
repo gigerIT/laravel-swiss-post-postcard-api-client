@@ -19,6 +19,8 @@ class WorkbenchServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Load views from the workbench resources/views directory
+        $this->loadViewsFrom(__DIR__.'/../../resources/views', 'workbench');
+
     }
 }

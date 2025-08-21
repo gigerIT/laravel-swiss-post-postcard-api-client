@@ -30,6 +30,14 @@ class SwissPostConnector extends Connector
         ];
     }
 
+    protected function defaultOauthHeaders(): array
+    {
+        return [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/x-www-form-urlencoded',
+        ];
+    }
+
     protected function defaultConfig(): array
     {
         return [
@@ -69,11 +77,21 @@ class SwissPostConnector extends Connector
 
     public function hasRequestFailed(Response $response): ?bool
     {
-        $data = $response->json();
+        // Don't apply custom error handling to OAuth token requests
+        if (str_contains($response->getPendingRequest()->getUri(), '/OAuth/token')) {
+            return $response->status() >= 400;
+        }
 
-        // Swiss Post API returns errors in the response body even with 200 status
-        if (isset($data['errors']) && ! empty($data['errors'])) {
-            return true;
+        try {
+            $data = $response->json();
+
+            // Swiss Post API returns errors in the response body even with 200 status
+            if (isset($data['errors']) && ! empty($data['errors'])) {
+                return true;
+            }
+        } catch (\Exception $e) {
+            // If JSON parsing fails, fall back to status code check
+            return $response->status() >= 400;
         }
 
         return $response->status() >= 400;
@@ -81,18 +99,28 @@ class SwissPostConnector extends Connector
 
     public function getRequestException(Response $response, ?\Throwable $senderException): ?\Throwable
     {
-        $data = $response->json();
+        // Don't apply custom error handling to OAuth token requests
+        if (str_contains($response->getPendingRequest()->getUri(), '/OAuth/token')) {
+            return $senderException;
+        }
 
-        if (isset($data['errors']) && ! empty($data['errors'])) {
-            $errors = collect($data['errors'])->map(function ($error) {
-                return sprintf('[%d] %s', $error['code'], $error['description']);
-            })->implode(', ');
+        try {
+            $data = $response->json();
 
-            return new SwissPostApiException(
-                "Swiss Post API Error: {$errors}",
-                $response->status(),
-                $senderException
-            );
+            if (isset($data['errors']) && ! empty($data['errors'])) {
+                $errors = collect($data['errors'])->map(function ($error) {
+                    return sprintf('[%d] %s', $error['code'], $error['description']);
+                })->implode(', ');
+
+                return new SwissPostApiException(
+                    "Swiss Post API Error: {$errors}",
+                    $response->status(),
+                    $senderException
+                );
+            }
+        } catch (\Exception $e) {
+            // If JSON parsing fails, return the original exception
+            return $senderException;
         }
 
         return $senderException;
