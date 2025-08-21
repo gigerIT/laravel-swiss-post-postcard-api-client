@@ -13,6 +13,12 @@ Route::prefix('api/test')->group(function () {
         ->name('api.test.debug.oauth');
     Route::post('/debug/raw-oauth', [PostcardTestController::class, 'testRawOAuth'])
         ->name('api.test.debug.raw-oauth');
+    Route::post('/debug/create-postcard', [PostcardTestController::class, 'debugCreatePostcard'])
+        ->name('api.test.debug.create-postcard');
+    Route::post('/debug/campaign-stats', [PostcardTestController::class, 'debugCampaignStats'])
+        ->name('api.test.debug.campaign-stats');
+    Route::post('/debug/validate-address', [PostcardTestController::class, 'debugValidateAddress'])
+        ->name('api.test.debug.validate-address');
 
     // Campaign management
     Route::post('/campaign/stats', [PostcardTestController::class, 'testCampaignStats'])

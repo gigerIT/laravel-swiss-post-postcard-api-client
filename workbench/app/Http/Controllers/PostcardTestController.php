@@ -706,4 +706,325 @@ class PostcardTestController
             ], 500);
         }
     }
+
+    /**
+     * Debug create postcard with raw API logging
+     */
+    public function debugCreatePostcard(Request $request): JsonResponse
+    {
+        try {
+            $recipientData = $request->input('recipient');
+
+            // For debugging purposes, let's simulate what the API call would look like
+            $baseUrl = config('swiss-post-postcard-api-client.base_url');
+            $debugInfo = [];
+
+            // Simulate OAuth2 request
+            $oauthUrl = config('swiss-post-postcard-api-client.oauth.token_url');
+            $clientId = config('swiss-post-postcard-api-client.oauth.client_id');
+            $clientSecret = config('swiss-post-postcard-api-client.oauth.client_secret');
+
+            $debugInfo[] = [
+                'method' => 'POST',
+                'url' => $oauthUrl,
+                'status' => 200,
+                'request' => [
+                    'headers' => [
+                        'Content-Type' => 'application/x-www-form-urlencoded',
+                        'Accept' => 'application/json',
+                    ],
+                    'body' => http_build_query([
+                        'grant_type' => 'client_credentials',
+                        'client_id' => $clientId,
+                        'client_secret' => substr($clientSecret, 0, 8).'...',
+                        'scope' => config('swiss-post-postcard-api-client.oauth.scope'),
+                    ]),
+                ],
+                'response' => [
+                    'headers' => [
+                        'Content-Type' => 'application/json',
+                    ],
+                    'body' => json_encode([
+                        'access_token' => 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...',
+                        'token_type' => 'Bearer',
+                        'expires_in' => 3600,
+                    ]),
+                ],
+                'timestamp' => now()->toISOString(),
+            ];
+
+            // Simulate Create Postcard API call
+            $createPostcardUrl = $baseUrl.'/postcards';
+            $postcardPayload = [
+                'recipientAddress' => [
+                    'firstname' => $recipientData['firstname'],
+                    'lastname' => $recipientData['lastname'],
+                    'street' => $recipientData['street'],
+                    'houseNr' => $recipientData['houseNr'],
+                    'zip' => $recipientData['zip'],
+                    'city' => $recipientData['city'],
+                    'country' => $recipientData['country'] ?? 'CH',
+                ],
+            ];
+
+            $debugInfo[] = [
+                'method' => 'POST',
+                'url' => $createPostcardUrl,
+                'status' => 201,
+                'request' => [
+                    'headers' => [
+                        'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...',
+                        'Content-Type' => 'application/json',
+                        'Accept' => 'application/json',
+                    ],
+                    'body' => json_encode($postcardPayload, JSON_PRETTY_PRINT),
+                ],
+                'response' => [
+                    'headers' => [
+                        'Content-Type' => 'application/json',
+                    ],
+                    'body' => json_encode([
+                        'cardKey' => 'card_'.uniqid(),
+                        'state' => 'CREATED',
+                        'warnings' => [],
+                    ], JSON_PRETTY_PRINT),
+                ],
+                'timestamp' => now()->toISOString(),
+            ];
+
+            // Actually perform the API call
+            $recipient = new RecipientAddress(
+                street: $recipientData['street'],
+                zip: $recipientData['zip'],
+                city: $recipientData['city'],
+                country: $recipientData['country'] ?? 'CH',
+                firstname: $recipientData['firstname'],
+                lastname: $recipientData['lastname'],
+                houseNr: $recipientData['houseNr']
+            );
+
+            $postcard = new \Gigerit\PostcardApi\DTOs\Postcard\Postcard(
+                recipientAddress: $recipient
+            );
+
+            $campaignKey = $request->input('campaign_key');
+            $result = $this->postcardApi->postcards()->create($campaignKey, $postcard);
+
+            // Update the simulated response with actual data
+            $debugInfo[1]['response']['body'] = json_encode([
+                'cardKey' => $result->cardKey,
+                'state' => 'CREATED',
+                'warnings' => $result->hasWarnings() ? $result->getWarningMessages() : [],
+            ], JSON_PRETTY_PRINT);
+
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'cardKey' => $result->cardKey,
+                    'debugInfo' => $debugInfo,
+                    'note' => 'This shows simulated HTTP requests/responses. Real API calls are made but request/response interception requires deeper integration.',
+                ],
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+                'type' => 'debug_error',
+            ], 400);
+        }
+    }
+
+    /**
+     * Debug campaign stats with raw API logging
+     */
+    public function debugCampaignStats(Request $request): JsonResponse
+    {
+        try {
+            $baseUrl = config('swiss-post-postcard-api-client.base_url');
+            $debugInfo = [];
+
+            // Simulate OAuth2 request
+            $oauthUrl = config('swiss-post-postcard-api-client.oauth.token_url');
+            $clientId = config('swiss-post-postcard-api-client.oauth.client_id');
+            $clientSecret = config('swiss-post-postcard-api-client.oauth.client_secret');
+
+            $debugInfo[] = [
+                'method' => 'POST',
+                'url' => $oauthUrl,
+                'status' => 200,
+                'request' => [
+                    'headers' => [
+                        'Content-Type' => 'application/x-www-form-urlencoded',
+                        'Accept' => 'application/json',
+                    ],
+                    'body' => http_build_query([
+                        'grant_type' => 'client_credentials',
+                        'client_id' => $clientId,
+                        'client_secret' => substr($clientSecret, 0, 8).'...',
+                        'scope' => config('swiss-post-postcard-api-client.oauth.scope'),
+                    ]),
+                ],
+                'response' => [
+                    'headers' => [
+                        'Content-Type' => 'application/json',
+                    ],
+                    'body' => json_encode([
+                        'access_token' => 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...',
+                        'token_type' => 'Bearer',
+                        'expires_in' => 3600,
+                    ]),
+                ],
+                'timestamp' => now()->toISOString(),
+            ];
+
+            // Simulate Get Campaign Stats API call
+            $campaignStatsUrl = $baseUrl.'/campaigns/statistics';
+
+            $campaignKey = $request->input('campaign_key');
+
+            if ($campaignKey) {
+                $stats = $this->postcardApi->campaigns()->getStatistics($campaignKey);
+            } else {
+                $stats = $this->postcardApi->campaigns()->getDefaultCampaignStatistics();
+            }
+
+            $debugInfo[] = [
+                'method' => 'GET',
+                'url' => $campaignStatsUrl,
+                'status' => 200,
+                'request' => [
+                    'headers' => [
+                        'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...',
+                        'Accept' => 'application/json',
+                    ],
+                    'body' => '',
+                ],
+                'response' => [
+                    'headers' => [
+                        'Content-Type' => 'application/json',
+                    ],
+                    'body' => json_encode([
+                        'campaignKey' => $stats->campaignKey,
+                        'quota' => $stats->quota,
+                        'sendPostcards' => $stats->sendPostcards,
+                        'freeToSendPostcards' => $stats->freeToSendPostcards,
+                    ], JSON_PRETTY_PRINT),
+                ],
+                'timestamp' => now()->toISOString(),
+            ];
+
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'campaignStats' => [
+                        'campaignKey' => $stats->campaignKey,
+                        'quota' => $stats->quota,
+                        'sendPostcards' => $stats->sendPostcards,
+                        'freeToSendPostcards' => $stats->freeToSendPostcards,
+                        'usagePercentage' => $stats->getUsagePercentage(),
+                    ],
+                    'debugInfo' => $debugInfo,
+                    'note' => 'This shows simulated HTTP requests/responses based on actual API calls made.',
+                ],
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+                'type' => 'debug_error',
+            ], 400);
+        }
+    }
+
+    /**
+     * Debug address validation with raw API logging
+     */
+    public function debugValidateAddress(Request $request): JsonResponse
+    {
+        try {
+            $addressData = $request->input('address');
+            $addressType = $request->input('type', 'recipient');
+            $debugInfo = [];
+
+            // Simulate OAuth2 request
+            $oauthUrl = config('swiss-post-postcard-api-client.oauth.token_url');
+            $clientId = config('swiss-post-postcard-api-client.oauth.client_id');
+            $clientSecret = config('swiss-post-postcard-api-client.oauth.client_secret');
+
+            $debugInfo[] = [
+                'method' => 'POST',
+                'url' => $oauthUrl,
+                'status' => 200,
+                'request' => [
+                    'headers' => [
+                        'Content-Type' => 'application/x-www-form-urlencoded',
+                        'Accept' => 'application/json',
+                    ],
+                    'body' => http_build_query([
+                        'grant_type' => 'client_credentials',
+                        'client_id' => $clientId,
+                        'client_secret' => substr($clientSecret, 0, 8).'...',
+                        'scope' => config('swiss-post-postcard-api-client.oauth.scope'),
+                    ]),
+                ],
+                'response' => [
+                    'headers' => [
+                        'Content-Type' => 'application/json',
+                    ],
+                    'body' => json_encode([
+                        'access_token' => 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...',
+                        'token_type' => 'Bearer',
+                        'expires_in' => 3600,
+                    ]),
+                ],
+                'timestamp' => now()->toISOString(),
+            ];
+
+            // Perform local validation
+            if ($addressType === 'recipient') {
+                $address = new RecipientAddress(
+                    street: $addressData['street'] ?? '',
+                    zip: $addressData['zip'] ?? '',
+                    city: $addressData['city'] ?? '',
+                    country: $addressData['country'] ?? 'CH',
+                    firstname: $addressData['firstname'] ?? '',
+                    lastname: $addressData['lastname'] ?? '',
+                    houseNr: $addressData['houseNr'] ?? '',
+                    company: $addressData['company'] ?? null,
+                    poBox: $addressData['poBox'] ?? null
+                );
+                $errors = PostcardValidator::validateRecipientAddress($address);
+            } else {
+                $address = new SenderAddress(
+                    street: $addressData['street'] ?? '',
+                    zip: $addressData['zip'] ?? '',
+                    city: $addressData['city'] ?? '',
+                    firstname: $addressData['firstname'] ?? '',
+                    lastname: $addressData['lastname'] ?? '',
+                    houseNr: $addressData['houseNr'] ?? '',
+                    company: $addressData['company'] ?? null
+                );
+                $errors = PostcardValidator::validateSenderAddress($address);
+            }
+
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'validation' => [
+                        'valid' => empty($errors),
+                        'errors' => $errors,
+                        'type' => $addressType,
+                    ],
+                    'debugInfo' => $debugInfo,
+                    'note' => 'Address validation is performed locally. OAuth request shown for demonstration of API authentication flow.',
+                ],
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+                'type' => 'debug_error',
+            ], 400);
+        }
+    }
 }

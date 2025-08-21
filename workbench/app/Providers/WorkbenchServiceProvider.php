@@ -22,5 +22,8 @@ class WorkbenchServiceProvider extends ServiceProvider
         // Load views from the workbench resources/views directory
         $this->loadViewsFrom(__DIR__.'/../../resources/views', 'workbench');
 
+        // set app config to use file cache
+        config(['cache.default' => 'file']);
+
     }
 }

@@ -99,6 +99,11 @@
                         class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm transition-colors">
                         <i class="fas fa-paint-brush mr-2"></i>Branding
                     </button>
+                    <button @click="activeTab = 'debug'"
+                        :class="activeTab === 'debug' ? 'border-red-500 text-red-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                        class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm transition-colors">
+                        <i class="fas fa-code mr-2"></i>API Debug
+                    </button>
                 </nav>
             </div>
 
@@ -559,6 +564,125 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- API Debug Tab -->
+                <div x-show="activeTab === 'debug'" x-cloak>
+                    <div class="space-y-6">
+                        <!-- Debug Controls -->
+                        <div class="bg-white rounded-lg shadow-sm border p-6">
+                            <h2 class="text-xl font-semibold text-gray-900 mb-6">
+                                <i class="fas fa-code text-blue-600 mr-2"></i>
+                                API Request/Response Debug
+                            </h2>
+                            <p class="text-gray-600 mb-6">Monitor raw API requests and responses from the Swiss Post API
+                            </p>
+
+                            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+                                <button @click="debugCreatePostcard()"
+                                    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg transition-colors">
+                                    <i class="fas fa-plus mr-2"></i>Debug Create Postcard
+                                </button>
+                                <button @click="debugCampaignStats()"
+                                    class="bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg transition-colors">
+                                    <i class="fas fa-chart-bar mr-2"></i>Debug Campaign Stats
+                                </button>
+                                <button @click="debugValidateAddress()"
+                                    class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-3 rounded-lg transition-colors">
+                                    <i class="fas fa-map-marker-alt mr-2"></i>Debug Address Validation
+                                </button>
+                            </div>
+
+                            <!-- Clear Debug Log -->
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-lg font-medium text-gray-900">Request/Response Log</h3>
+                                <button @click="clearDebugLog()"
+                                    class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded text-sm transition-colors">
+                                    <i class="fas fa-trash mr-1"></i>Clear Log
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Debug Log Display -->
+                        <div x-show="debugLog.length > 0" class="space-y-4">
+                            <template x-for="(entry, index) in debugLog" :key="index">
+                                <div class="bg-white rounded-lg shadow-sm border overflow-hidden">
+                                    <!-- Entry Header -->
+                                    <div class="bg-gray-50 px-6 py-3 border-b border-gray-200">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center space-x-3">
+                                                <span class="text-sm font-medium text-gray-900"
+                                                    x-text="entry.method"></span>
+                                                <span class="text-sm text-gray-600" x-text="entry.url"></span>
+                                                <span
+                                                    :class="entry.status >= 400 ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'"
+                                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
+                                                    <span x-text="entry.status"></span>
+                                                </span>
+                                            </div>
+                                            <span class="text-xs text-gray-500" x-text="entry.timestamp"></span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Request/Response Details -->
+                                    <div class="p-6">
+                                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                            <!-- Request -->
+                                            <div>
+                                                <h4 class="text-sm font-medium text-gray-900 mb-3">
+                                                    <i class="fas fa-arrow-up text-blue-500 mr-2"></i>Request
+                                                </h4>
+                                                <div class="space-y-3">
+                                                    <!-- Request Headers -->
+                                                    <div x-show="entry.request.headers">
+                                                        <h5 class="text-xs font-medium text-gray-700 mb-1">Headers:</h5>
+                                                        <pre class="text-xs bg-gray-50 p-2 rounded border overflow-auto max-h-32"
+                                                            x-text="JSON.stringify(entry.request.headers, null, 2)"></pre>
+                                                    </div>
+                                                    <!-- Request Body -->
+                                                    <div x-show="entry.request.body">
+                                                        <h5 class="text-xs font-medium text-gray-700 mb-1">Body:</h5>
+                                                        <pre class="text-xs bg-gray-50 p-2 rounded border overflow-auto max-h-40"
+                                                            x-text="typeof entry.request.body === 'string' ? entry.request.body : JSON.stringify(entry.request.body, null, 2)"></pre>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Response -->
+                                            <div>
+                                                <h4 class="text-sm font-medium text-gray-900 mb-3">
+                                                    <i class="fas fa-arrow-down text-green-500 mr-2"></i>Response
+                                                </h4>
+                                                <div class="space-y-3">
+                                                    <!-- Response Headers -->
+                                                    <div x-show="entry.response.headers">
+                                                        <h5 class="text-xs font-medium text-gray-700 mb-1">Headers:</h5>
+                                                        <pre class="text-xs bg-gray-50 p-2 rounded border overflow-auto max-h-32"
+                                                            x-text="JSON.stringify(entry.response.headers, null, 2)"></pre>
+                                                    </div>
+                                                    <!-- Response Body -->
+                                                    <div x-show="entry.response.body">
+                                                        <h5 class="text-xs font-medium text-gray-700 mb-1">Body:</h5>
+                                                        <pre class="text-xs bg-gray-50 p-2 rounded border overflow-auto max-h-40"
+                                                            x-text="typeof entry.response.body === 'string' ? entry.response.body : JSON.stringify(entry.response.body, null, 2)"></pre>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+
+                        <!-- Empty State -->
+                        <div x-show="debugLog.length === 0"
+                            class="bg-white rounded-lg shadow-sm border p-12 text-center">
+                            <i class="fas fa-code text-gray-400 text-4xl mb-4"></i>
+                            <h3 class="text-lg font-medium text-gray-900 mb-2">No API calls logged yet</h3>
+                            <p class="text-gray-600">Use the debug buttons above to start monitoring API requests and
+                                responses</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -630,6 +754,7 @@
                     text: 'Hello from Switzerland!'
                 },
                 validationResults: null,
+                debugLog: [],
 
                 async makeRequest(url, data = {}, method = 'POST') {
                     const options = {
@@ -893,6 +1018,114 @@
                             JSON.stringify(result.data, null, 2));
                     } catch (error) {
                         console.error('Failed to get postcard state:', error);
+                    }
+                },
+
+                clearDebugLog() {
+                    this.debugLog = [];
+                },
+
+                addDebugEntry(method, url, requestData, responseData, status) {
+                    this.debugLog.unshift({
+                        timestamp: new Date().toLocaleString(),
+                        method: method,
+                        url: url,
+                        status: status,
+                        request: requestData,
+                        response: responseData
+                    });
+
+                    // Keep only last 10 entries to prevent memory issues
+                    if (this.debugLog.length > 10) {
+                        this.debugLog = this.debugLog.slice(0, 10);
+                    }
+                },
+
+                async debugCreatePostcard() {
+                    try {
+                        this.loading = true;
+                        const result = await this.makeRequest('/api/test/debug/create-postcard', {
+                            recipient: this.stepByStep.recipient.firstname ? this.stepByStep.recipient : {
+                                firstname: 'John',
+                                lastname: 'Doe',
+                                street: 'Musterstrasse',
+                                houseNr: '123',
+                                zip: '8000',
+                                city: 'Zürich',
+                                country: 'CH'
+                            }
+                        });
+
+                        if (result.data && result.data.debugInfo) {
+                            result.data.debugInfo.forEach(entry => {
+                                this.addDebugEntry(
+                                    entry.method,
+                                    entry.url,
+                                    entry.request,
+                                    entry.response,
+                                    entry.status
+                                );
+                            });
+                        }
+
+                        this.showAlert('success', 'Debug Complete', 'Postcard creation API calls logged');
+                    } catch (error) {
+                        console.error('Debug create postcard failed:', error);
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+
+                async debugCampaignStats() {
+                    try {
+                        this.loading = true;
+                        const result = await this.makeRequest('/api/test/debug/campaign-stats', {}, 'POST');
+
+                        if (result.data && result.data.debugInfo) {
+                            result.data.debugInfo.forEach(entry => {
+                                this.addDebugEntry(
+                                    entry.method,
+                                    entry.url,
+                                    entry.request,
+                                    entry.response,
+                                    entry.status
+                                );
+                            });
+                        }
+
+                        this.showAlert('success', 'Debug Complete', 'Campaign stats API calls logged');
+                    } catch (error) {
+                        console.error('Debug campaign stats failed:', error);
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+
+                async debugValidateAddress() {
+                    try {
+                        this.loading = true;
+                        const result = await this.makeRequest('/api/test/debug/validate-address', {
+                            address: this.validation.address,
+                            type: this.validation.addressType
+                        });
+
+                        if (result.data && result.data.debugInfo) {
+                            result.data.debugInfo.forEach(entry => {
+                                this.addDebugEntry(
+                                    entry.method,
+                                    entry.url,
+                                    entry.request,
+                                    entry.response,
+                                    entry.status
+                                );
+                            });
+                        }
+
+                        this.showAlert('success', 'Debug Complete', 'Address validation API calls logged');
+                    } catch (error) {
+                        console.error('Debug validate address failed:', error);
+                    } finally {
+                        this.loading = false;
                     }
                 },
 

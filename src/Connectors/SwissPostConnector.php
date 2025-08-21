@@ -77,21 +77,30 @@ class SwissPostConnector extends Connector
 
     public function hasRequestFailed(Response $response): ?bool
     {
-        // Don't apply custom error handling to OAuth token requests
+        // Always use status code for OAuth token requests
         if (str_contains($response->getPendingRequest()->getUri(), '/OAuth/token')) {
             return $response->status() >= 400;
         }
 
-        try {
-            $data = $response->json();
-
-            // Swiss Post API returns errors in the response body even with 200 status
-            if (isset($data['errors']) && ! empty($data['errors'])) {
-                return true;
-            }
-        } catch (\Exception $e) {
-            // If JSON parsing fails, fall back to status code check
+        // Check if response is HTML (Swiss Post returns HTML error pages for auth failures)
+        $contentType = $response->header('Content-Type') ?? '';
+        if (str_contains($contentType, 'text/html')) {
             return $response->status() >= 400;
+        }
+
+        // Only try JSON parsing if we have JSON content
+        if (str_contains($contentType, 'application/json')) {
+            try {
+                $data = $response->json();
+
+                // Swiss Post API returns errors in the response body even with 200 status
+                if (isset($data['errors']) && ! empty($data['errors'])) {
+                    return true;
+                }
+            } catch (\Exception $e) {
+                // If JSON parsing fails, fall back to status code check
+                return $response->status() >= 400;
+            }
         }
 
         return $response->status() >= 400;
@@ -104,23 +113,44 @@ class SwissPostConnector extends Connector
             return $senderException;
         }
 
-        try {
-            $data = $response->json();
+        // Check if response is HTML (Swiss Post returns HTML error pages for auth failures)
+        $contentType = $response->header('Content-Type') ?? '';
+        if (str_contains($contentType, 'text/html')) {
+            $bodyPreview = substr($response->body(), 0, 200);
 
-            if (isset($data['errors']) && ! empty($data['errors'])) {
-                $errors = collect($data['errors'])->map(function ($error) {
-                    return sprintf('[%d] %s', $error['code'], $error['description']);
-                })->implode(', ');
+            return new SwissPostApiException(
+                "Swiss Post API returned HTML error page (likely authentication failure). Status: {$response->status()}. Content preview: {$bodyPreview}",
+                $response->status(),
+                $senderException
+            );
+        }
+
+        // Only try JSON parsing if we have JSON content
+        if (str_contains($contentType, 'application/json')) {
+            try {
+                $data = $response->json();
+
+                if (isset($data['errors']) && ! empty($data['errors'])) {
+                    $errors = collect($data['errors'])->map(function ($error) {
+                        return sprintf('[%d] %s', $error['code'], $error['description']);
+                    })->implode(', ');
+
+                    return new SwissPostApiException(
+                        "Swiss Post API Error: {$errors}",
+                        $response->status(),
+                        $senderException
+                    );
+                }
+            } catch (\Exception $e) {
+                // If JSON parsing fails, return a descriptive error
+                $bodyPreview = substr($response->body(), 0, 200);
 
                 return new SwissPostApiException(
-                    "Swiss Post API Error: {$errors}",
+                    "Failed to parse Swiss Post API response as JSON. Status: {$response->status()}. Content preview: {$bodyPreview}",
                     $response->status(),
                     $senderException
                 );
             }
-        } catch (\Exception $e) {
-            // If JSON parsing fails, return the original exception
-            return $senderException;
         }
 
         return $senderException;
