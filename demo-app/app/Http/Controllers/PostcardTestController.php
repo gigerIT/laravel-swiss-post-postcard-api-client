@@ -378,7 +378,7 @@ class PostcardTestController
 
             // Store the uploaded file temporarily
             $path = $image->store('temp', 'local');
-            $fullPath = storage_path('app/'.$path);
+            $fullPath = Storage::disk('local')->path($path);
 
             // Validate image dimensions
             $errors = PostcardValidator::validateImageDimensions($fullPath, ImageDimensions::FRONT_IMAGE);
@@ -488,7 +488,7 @@ class PostcardTestController
 
                     $image = $request->file('image');
                     $path = $image->store('temp', 'local');
-                    $fullPath = storage_path('app/'.$path);
+                    $fullPath = Storage::disk('local')->path($path);
 
                     if ($brandingType === 'image') {
                         $this->postcardApi->branding()->uploadImage($cardKey, $fullPath);
@@ -667,7 +667,7 @@ class PostcardTestController
             // Store uploaded image temporarily
             $image = $request->file('image');
             $path = $image->store('temp', 'local');
-            $fullPath = storage_path('app/'.$path);
+            $fullPath = Storage::disk('local')->path($path);
 
             $campaignKey = $request->input('campaign_key');
             $senderText = $request->input('sender_text');

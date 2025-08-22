@@ -13,6 +13,27 @@
         [x-cloak] {
             display: none !important;
         }
+
+        /* Ensure long text breaks properly in alerts */
+        .alert-message {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            word-break: break-all;
+            hyphens: auto;
+            white-space: pre-wrap;
+            max-width: 100%;
+        }
+
+        .alert-details {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            word-break: break-all;
+            white-space: pre-wrap;
+            max-width: 100%;
+            max-height: 16rem;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
     </style>
 </head>
 
@@ -99,6 +120,11 @@
                         class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm transition-colors">
                         <i class="fas fa-paint-brush mr-2"></i>Branding
                     </button>
+                    <button @click="activeTab = 'preview'"
+                        :class="activeTab === 'preview' ? 'border-red-500 text-red-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                        class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm transition-colors">
+                        <i class="fas fa-eye mr-2"></i>Preview
+                    </button>
                     <button @click="activeTab = 'debug'"
                         :class="activeTab === 'debug' ? 'border-red-500 text-red-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
                         class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm transition-colors">
@@ -110,18 +136,18 @@
             <!-- Alert Messages -->
             <div x-show="alert.show" x-cloak
                 :class="alert.type === 'success' ? 'bg-green-50 border-green-200 text-green-800' : 'bg-red-50 border-red-200 text-red-800'"
-                class="border rounded-lg p-4 mb-6">
-                <div class="flex items-start">
+                class="border rounded-lg p-4 mb-6 w-full overflow-hidden">
+                <div class="flex items-start w-full">
                     <i :class="alert.type === 'success' ? 'fas fa-check-circle text-green-400' : 'fas fa-exclamation-circle text-red-400'"
                         class="mr-3 mt-0.5"></i>
-                    <div class="flex-1">
-                        <h4 class="font-medium" x-text="alert.title"></h4>
-                        <p class="mt-1" x-text="alert.message"></p>
+                    <div class="flex-1 min-w-0 max-w-full">
+                        <h4 class="font-medium alert-message" x-text="alert.title"></h4>
+                        <div class="mt-1 alert-message" x-text="alert.message"></div>
                         <div x-show="alert.details" class="mt-2">
                             <details class="cursor-pointer">
                                 <summary class="text-sm font-medium">Show Details</summary>
-                                <pre class="mt-2 text-xs bg-white p-2 rounded border overflow-auto"
-                                    x-text="alert.details"></pre>
+                                <div class="mt-2 text-xs bg-white p-2 rounded border alert-details"
+                                    x-text="alert.details"></div>
                             </details>
                         </div>
                     </div>
@@ -565,6 +591,154 @@
                     </div>
                 </div>
 
+                <!-- Preview Tab -->
+                <div x-show="activeTab === 'preview'" x-cloak>
+                    <div class="bg-white rounded-lg shadow-sm border p-6">
+                        <h2 class="text-xl font-semibold text-gray-900 mb-6">
+                            <i class="fas fa-eye text-blue-600 mr-2"></i>
+                            Postcard Preview
+                        </h2>
+                        <p class="text-gray-600 mb-6">View how your postcard will look when printed</p>
+
+                        <!-- Card Key Input Section -->
+                        <div class="bg-gray-50 border border-gray-200 rounded-lg p-6 mb-6">
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">
+                                <i class="fas fa-key text-gray-600 mr-2"></i>
+                                Card Key
+                            </h3>
+                            <div class="flex items-center space-x-4">
+                                <div class="flex-1">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Enter Card Key</label>
+                                    <input type="text" x-model="previewCardKey"
+                                        placeholder="Enter card key manually or use from step-by-step"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                </div>
+                                <div class="flex-shrink-0">
+                                    <button @click="previewCardKey = currentCard" :disabled="!currentCard"
+                                        class="bg-gray-600 hover:bg-gray-700 disabled:bg-gray-400 text-white px-4 py-2 rounded-lg transition-colors">
+                                        <i class="fas fa-copy mr-2"></i>Use Current
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="mt-2 flex items-center text-sm">
+                                <div x-show="currentCard" class="text-green-600">
+                                    <i class="fas fa-check-circle mr-1"></i>
+                                    Current card key: <span x-text="currentCard" class="font-mono"></span>
+                                </div>
+                                <div x-show="!currentCard" class="text-gray-500">
+                                    <i class="fas fa-info-circle mr-1"></i>
+                                    No current card key from step-by-step form
+                                </div>
+                            </div>
+                        </div>
+
+                        <div x-show="!previewCardKey" class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg mb-6">
+                            <div class="flex items-center">
+                                <i class="fas fa-info-circle text-yellow-600 mr-2"></i>
+                                <span class="text-yellow-800">Enter a card key above to generate previews, or create a
+                                    postcard first in the "Step by Step" tab.</span>
+                            </div>
+                        </div>
+
+                        <div x-show="previewCardKey" class="space-y-6">
+                            <!-- Preview Controls -->
+                            <div class="flex justify-center space-x-4 mb-6">
+                                <button @click="loadPreview('front')" :disabled="loading"
+                                    class="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                                    <i class="fas fa-image mr-2"></i>
+                                    <span x-show="!loading">Load Front Preview</span>
+                                    <span x-show="loading">Loading...</span>
+                                </button>
+                                <button @click="loadPreview('back')" :disabled="loading"
+                                    class="bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                                    <i class="fas fa-address-card mr-2"></i>
+                                    <span x-show="!loading">Load Back Preview</span>
+                                    <span x-show="loading">Loading...</span>
+                                </button>
+                            </div>
+
+                            <!-- Preview Display Area -->
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                <!-- Front Preview -->
+                                <div class="space-y-4">
+                                    <h3 class="text-lg font-medium text-gray-900 text-center">Front Side</h3>
+                                    <div
+                                        class="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center min-h-96">
+                                        <div x-show="!previewImages.front"
+                                            class="flex flex-col items-center justify-center h-full">
+                                            <i class="fas fa-image text-gray-400 text-6xl mb-4"></i>
+                                            <p class="text-gray-500 text-lg">Front preview not loaded</p>
+                                            <p class="text-gray-400 text-sm mt-2">Click "Load Front Preview" to see the
+                                                front side</p>
+                                        </div>
+                                        <div x-show="previewImages.front" class="space-y-4">
+                                            <img :src="previewImages.front" alt="Front Preview"
+                                                class="max-w-full h-auto rounded-lg shadow-md mx-auto"
+                                                style="max-height: 400px;">
+                                            <div class="flex justify-center space-x-2">
+                                                <button @click="previewImages.front = null"
+                                                    class="text-gray-500 hover:text-gray-700 text-sm">
+                                                    <i class="fas fa-times mr-1"></i>Clear
+                                                </button>
+                                                <a :href="previewImages.front" target="_blank"
+                                                    class="text-blue-600 hover:text-blue-800 text-sm">
+                                                    <i class="fas fa-external-link-alt mr-1"></i>Open Full Size
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Back Preview -->
+                                <div class="space-y-4">
+                                    <h3 class="text-lg font-medium text-gray-900 text-center">Back Side</h3>
+                                    <div
+                                        class="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center min-h-96">
+                                        <div x-show="!previewImages.back"
+                                            class="flex flex-col items-center justify-center h-full">
+                                            <i class="fas fa-address-card text-gray-400 text-6xl mb-4"></i>
+                                            <p class="text-gray-500 text-lg">Back preview not loaded</p>
+                                            <p class="text-gray-400 text-sm mt-2">Click "Load Back Preview" to see the
+                                                back side</p>
+                                        </div>
+                                        <div x-show="previewImages.back" class="space-y-4">
+                                            <img :src="previewImages.back" alt="Back Preview"
+                                                class="max-w-full h-auto rounded-lg shadow-md mx-auto"
+                                                style="max-height: 400px;">
+                                            <div class="flex justify-center space-x-2">
+                                                <button @click="previewImages.back = null"
+                                                    class="text-gray-500 hover:text-gray-700 text-sm">
+                                                    <i class="fas fa-times mr-1"></i>Clear
+                                                </button>
+                                                <a :href="previewImages.back" target="_blank"
+                                                    class="text-blue-600 hover:text-blue-800 text-sm">
+                                                    <i class="fas fa-external-link-alt mr-1"></i>Open Full Size
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Preview Info -->
+                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                <div class="flex items-start">
+                                    <i class="fas fa-info-circle text-blue-600 mr-2 mt-0.5"></i>
+                                    <div class="text-blue-800 text-sm">
+                                        <p class="font-medium mb-1">Preview Information:</p>
+                                        <ul class="list-disc list-inside space-y-1">
+                                            <li>Front side shows your uploaded image</li>
+                                            <li>Back side shows the recipient address and sender text</li>
+                                            <li>Images are generated by the Swiss Post API</li>
+                                            <li>Previews reflect the actual printed postcard appearance</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- API Debug Tab -->
                 <div x-show="activeTab === 'debug'" x-cloak>
                     <div class="space-y-6">
@@ -723,21 +897,21 @@
                 },
                 stepByStep: {
                     recipient: {
-                        firstname: '',
-                        lastname: '',
-                        street: '',
-                        houseNr: '',
-                        zip: '',
-                        city: '',
+                        firstname: 'Jane',
+                        lastname: 'Smith',
+                        street: 'Bahnhofstrasse',
+                        houseNr: '42',
+                        zip: '3000',
+                        city: 'Bern',
                         country: 'CH'
                     },
                     sender: {
-                        firstname: '',
-                        lastname: '',
-                        street: '',
-                        houseNr: '',
-                        zip: '',
-                        city: ''
+                        firstname: 'Max',
+                        lastname: 'Mustermann',
+                        street: 'Beispielweg',
+                        houseNr: '15',
+                        zip: '4000',
+                        city: 'Basel'
                     }
                 },
                 validation: {
@@ -755,6 +929,11 @@
                 },
                 validationResults: null,
                 debugLog: [],
+                previewImages: {
+                    front: null,
+                    back: null
+                },
+                previewCardKey: '',
 
                 async makeRequest(url, data = {}, method = 'POST') {
                     const options = {
@@ -796,12 +975,24 @@
                                 errorTitle = 'Swiss Post API Authentication Issue';
                                 errorMessage = result.error || 'The API returned HTML instead of JSON';
                                 details = result.details ? JSON.stringify(result.details, null, 2) : '';
+
+                                // For JSON parse errors, also include the full error in details
+                                if (errorMessage.length > 200) {
+                                    details = errorMessage + (details ? '\n\nAdditional Details:\n' + details : '');
+                                    errorMessage = errorMessage.substring(0, 200) + '... (click "Show Details" for full error)';
+                                }
                             } else if (result.type === 'config_error') {
                                 errorTitle = 'Configuration Error';
                                 errorMessage = result.error || 'API credentials not configured';
                                 details = result.config_info ? JSON.stringify(result.config_info, null, 2) : '';
                             } else if (result.details) {
                                 details = JSON.stringify(result.details, null, 2);
+                            }
+
+                            // For other error types, ensure full error is shown
+                            if (!result.type && errorMessage.length > 200) {
+                                details = errorMessage + (details ? '\n\nAdditional Details:\n' + details : '');
+                                errorMessage = errorMessage.substring(0, 200) + '... (click "Show Details" for full error)';
                             }
 
                             this.showAlert('error', errorTitle, errorMessage, details);
@@ -839,21 +1030,59 @@
                             const errorText = await response.text();
                             try {
                                 const errorJson = JSON.parse(errorText);
-                                throw new Error(errorJson.message || errorJson.error || `HTTP ${response.status}: ${response.statusText}`);
+                                let errorMessage = errorJson.message || errorJson.error || `HTTP ${response.status}: ${response.statusText}`;
+                                let details = '';
+
+                                if (errorJson.details) {
+                                    details = JSON.stringify(errorJson.details, null, 2);
+                                } else if (errorText.length > 200) {
+                                    details = errorText;
+                                }
+
+                                this.showAlert('error', 'Request Failed', errorMessage, details);
+                                const error = new Error(errorMessage);
+                                error.alreadyHandled = true;
+                                throw error;
                             } catch (parseError) {
-                                throw new Error(`HTTP ${response.status}: ${response.statusText}\n${errorText.substring(0, 200)}...`);
+                                let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+                                let details = errorText; // Show full error text without truncation
+
+                                this.showAlert('error', 'Request Failed', errorMessage, details);
+                                const error = new Error(errorMessage);
+                                error.alreadyHandled = true;
+                                throw error;
                             }
                         }
 
                         const result = await response.json();
 
                         if (!result.success) {
-                            throw new Error(result.error || 'Request failed');
+                            let errorMessage = result.error || 'Request failed';
+                            let details = '';
+
+                            // Always show the full error message
+                            details = errorMessage;
+
+                            // Show a shortened version in the main message if it's very long
+                            if (errorMessage.length > 200) {
+                                errorMessage = errorMessage.substring(0, 200) + '... (click "Show Details" for full error)';
+                            }
+
+                            if (result.details) {
+                                details = details + '\n\nAdditional Details:\n' + JSON.stringify(result.details, null, 2);
+                            }
+
+                            this.showAlert('error', 'Request Failed', errorMessage, details);
+                            const error = new Error(result.error || 'Request failed');
+                            error.alreadyHandled = true;
+                            throw error;
                         }
 
                         return result;
                     } catch (error) {
-                        this.showAlert('error', 'Request Failed', error.message);
+                        if (!error.alreadyHandled) {
+                            this.showAlert('error', 'Request Failed', error.message);
+                        }
                         throw error;
                     }
                 },
@@ -881,6 +1110,9 @@
                             JSON.stringify(result.data, null, 2));
                     } catch (error) {
                         console.error('Raw OAuth test failed:', error);
+                        if (!error.alreadyHandled) {
+                            this.showAlert('error', 'Raw OAuth Test Failed', error.message);
+                        }
                     } finally {
                         this.loading = false;
                     }
@@ -895,6 +1127,9 @@
                             JSON.stringify(result.data, null, 2));
                     } catch (error) {
                         console.error('OAuth debug failed:', error);
+                        if (!error.alreadyHandled) {
+                            this.showAlert('error', 'OAuth Debug Failed', error.message);
+                        }
                     } finally {
                         this.loading = false;
                     }
@@ -910,6 +1145,9 @@
                         console.error('Failed to load campaign stats:', error);
                         // Show the error in the UI when loading campaign stats
                         // This will help with debugging configuration issues
+                        if (!error.alreadyHandled) {
+                            this.showAlert('error', 'Failed to Load Campaign Stats', error.message);
+                        }
                     } finally {
                         this.loading = false;
                     }
@@ -939,11 +1177,15 @@
                         const result = await this.makeFormRequest('/api/test/postcard/create-complete', formData);
 
                         this.currentCard = result.data.cardKey;
+                        this.previewCardKey = result.data.cardKey; // Auto-populate preview card key
                         this.showAlert('success', 'Postcard Created!',
                             `Your postcard has been created with key: ${result.data.cardKey}`,
                             JSON.stringify(result.data, null, 2));
                     } catch (error) {
                         console.error('Failed to create postcard:', error);
+                        if (!error.alreadyHandled) {
+                            this.showAlert('error', 'Failed to Create Postcard', error.message);
+                        }
                     } finally {
                         this.loading = false;
                     }
@@ -959,10 +1201,14 @@
                         });
 
                         this.currentCard = result.data.cardKey;
+                        this.previewCardKey = result.data.cardKey; // Auto-populate preview card key
                         this.showAlert('success', 'Postcard Created!',
                             `Postcard initialized with key: ${result.data.cardKey}`);
                     } catch (error) {
                         console.error('Failed to create postcard:', error);
+                        if (!error.alreadyHandled) {
+                            this.showAlert('error', 'Failed to Create Postcard', error.message);
+                        }
                     } finally {
                         this.loading = false;
                     }
@@ -982,6 +1228,9 @@
                         this.showAlert(result.valid ? 'success' : 'error', 'Address Validation', message);
                     } catch (error) {
                         console.error('Failed to validate address:', error);
+                        if (!error.alreadyHandled) {
+                            this.showAlert('error', 'Failed to Validate Address', error.message);
+                        }
                     } finally {
                         this.loading = false;
                     }
@@ -1000,6 +1249,9 @@
                         this.showAlert(result.valid ? 'success' : 'error', 'Text Validation', message);
                     } catch (error) {
                         console.error('Failed to validate text:', error);
+                        if (!error.alreadyHandled) {
+                            this.showAlert('error', 'Failed to Validate Text', error.message);
+                        }
                     } finally {
                         this.loading = false;
                     }
@@ -1018,6 +1270,9 @@
                             JSON.stringify(result.data, null, 2));
                     } catch (error) {
                         console.error('Failed to get postcard state:', error);
+                        if (!error.alreadyHandled) {
+                            this.showAlert('error', 'Failed to Get Postcard State', error.message);
+                        }
                     }
                 },
 
@@ -1071,6 +1326,9 @@
                         this.showAlert('success', 'Debug Complete', 'Postcard creation API calls logged');
                     } catch (error) {
                         console.error('Debug create postcard failed:', error);
+                        if (!error.alreadyHandled) {
+                            this.showAlert('error', 'Debug Create Postcard Failed', error.message);
+                        }
                     } finally {
                         this.loading = false;
                     }
@@ -1096,6 +1354,9 @@
                         this.showAlert('success', 'Debug Complete', 'Campaign stats API calls logged');
                     } catch (error) {
                         console.error('Debug campaign stats failed:', error);
+                        if (!error.alreadyHandled) {
+                            this.showAlert('error', 'Debug Campaign Stats Failed', error.message);
+                        }
                     } finally {
                         this.loading = false;
                     }
@@ -1124,6 +1385,42 @@
                         this.showAlert('success', 'Debug Complete', 'Address validation API calls logged');
                     } catch (error) {
                         console.error('Debug validate address failed:', error);
+                        if (!error.alreadyHandled) {
+                            this.showAlert('error', 'Debug Validate Address Failed', error.message);
+                        }
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+
+                async loadPreview(side) {
+                    const cardKey = this.previewCardKey || this.currentCard;
+
+                    if (!cardKey) {
+                        this.showAlert('error', 'No Card Key Available', 'Please enter a card key or create a postcard first before generating a preview.');
+                        return;
+                    }
+
+                    try {
+                        this.loading = true;
+
+                        const result = await this.makeRequest('/api/test/postcard/preview', {
+                            card_key: cardKey,
+                            side: side
+                        });
+
+                        if (result.success && result.data.preview_url) {
+                            this.previewImages[side] = result.data.preview_url;
+                            this.showAlert('success', `${side.charAt(0).toUpperCase() + side.slice(1)} Preview Loaded`,
+                                `Successfully generated ${side} side preview for card: ${cardKey}`);
+                        } else {
+                            throw new Error('Failed to load preview: No preview URL returned');
+                        }
+                    } catch (error) {
+                        console.error(`Failed to load ${side} preview:`, error);
+                        if (!error.alreadyHandled) {
+                            this.showAlert('error', `Failed to Load ${side.charAt(0).toUpperCase() + side.slice(1)} Preview`, error.message);
+                        }
                     } finally {
                         this.loading = false;
                     }
