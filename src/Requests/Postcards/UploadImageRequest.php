@@ -2,12 +2,16 @@
 
 namespace Gigerit\PostcardApi\Requests\Postcards;
 
+use Saloon\Contracts\Body\HasBody;
 use Saloon\Data\MultipartValue;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
+use Saloon\Traits\Body\HasMultipartBody;
 
-class UploadImageRequest extends Request
+class UploadImageRequest extends Request implements HasBody
 {
+    use HasMultipartBody;
+
     protected Method $method = Method::PUT;
 
     public function __construct(
@@ -31,10 +35,9 @@ class UploadImageRequest extends Request
     protected function defaultBody(): array
     {
         return [
-            'image' => new MultipartValue(
+            new MultipartValue(
                 name: 'image',
                 value: fopen($this->imagePath, 'r'),
-                filename: $this->filename ?? basename($this->imagePath)
             ),
         ];
     }
