@@ -79,7 +79,7 @@ class PostcardWorkflowTest extends TestCase
         $this->assertFalse($createResult->hasErrors());
 
         // 3. Upload image
-        $uploadResult = $this->api->postcards()->uploadImage($cardKey, $this->tempImagePath, 'test.jpg', false);
+        $uploadResult = $this->api->postcards()->uploadImage($cardKey, $this->tempImagePath, false);
         $this->assertFalse($uploadResult->hasErrors());
 
         // 4. Upload sender text
