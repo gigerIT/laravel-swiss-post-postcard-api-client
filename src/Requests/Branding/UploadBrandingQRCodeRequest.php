@@ -3,11 +3,15 @@
 namespace Gigerit\PostcardApi\Requests\Branding;
 
 use Gigerit\PostcardApi\DTOs\Branding\BrandingQRCode;
+use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
+use Saloon\Traits\Body\HasJsonBody;
 
-class UploadBrandingQRCodeRequest extends Request
+class UploadBrandingQRCodeRequest extends Request implements HasBody
 {
+    use HasJsonBody;
+
     protected Method $method = Method::PUT;
 
     public function __construct(

@@ -4,9 +4,12 @@ namespace Gigerit\PostcardApi\Requests\Postcards;
 
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
+use Saloon\Traits\Plugins\AcceptsJson;
 
 class GetPostcardStateRequest extends Request
 {
+    use AcceptsJson;
+
     protected Method $method = Method::GET;
 
     public function __construct(

@@ -3,11 +3,15 @@
 namespace Gigerit\PostcardApi\Requests\Postcards;
 
 use Gigerit\PostcardApi\DTOs\Postcard\Postcard;
+use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
+use Saloon\Traits\Body\HasJsonBody;
 
-class CreatePostcardRequest extends Request
+class CreatePostcardRequest extends Request implements HasBody
 {
+    use HasJsonBody;
+
     protected Method $method = Method::POST;
 
     public function __construct(
