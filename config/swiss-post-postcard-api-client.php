@@ -18,8 +18,8 @@ return [
     'oauth' => [
         'auth_url' => env('SWISS_POST_POSTCARD_API_AUTH_URL', 'https://apiint.post.ch/OAuth/authorization'),
         'token_url' => env('SWISS_POST_POSTCARD_API_TOKEN_URL', 'https://apiint.post.ch/OAuth/token'),
-        'client_id' => env('SWISS_POST_POSTCARD_API_CLIENT_ID', 'ad8e1fce4902bd3ef8264c139b668647'),
-        'client_secret' => env('SWISS_POST_POSTCARD_API_CLIENT_SECRET', '52b27fc114f58b95fd1eb354f44d2058'),
+        'client_id' => env('SWISS_POST_POSTCARD_API_CLIENT_ID'),
+        'client_secret' => env('SWISS_POST_POSTCARD_API_CLIENT_SECRET'),
         'scope' => env('SWISS_POST_POSTCARD_API_SCOPE', 'PCCAPI'),
     ],
 
@@ -32,7 +32,7 @@ return [
     | overridden per request if needed.
     |
     */
-    'default_campaign' => env('SWISS_POST_POSTCARD_API_DEFAULT_CAMPAIGN', '9b6af9bf-ac17-423e-b5ef-251bcfbc8987'),
+    'default_campaign' => env('SWISS_POST_POSTCARD_API_DEFAULT_CAMPAIGN'),
 
     /*
     |--------------------------------------------------------------------------
