@@ -116,10 +116,10 @@ class SwissPostConnector extends Connector
         // Check if response is HTML (Swiss Post returns HTML error pages for auth failures)
         $contentType = $response->header('Content-Type') ?? '';
         if (str_contains($contentType, 'text/html')) {
-            $bodyPreview = substr($response->body(), 0, 200);
+            $bodyPreview = substr($response->body(), 0, 2000);
 
             return new SwissPostApiException(
-                "Swiss Post API returned HTML error page (likely authentication failure). Status: {$response->status()}. Content preview: {$bodyPreview}",
+                "Postcard API Error {$response->status()} {$bodyPreview}",
                 $response->status(),
                 $senderException
             );
@@ -143,10 +143,10 @@ class SwissPostConnector extends Connector
                 }
             } catch (\Exception $e) {
                 // If JSON parsing fails, return a descriptive error
-                $bodyPreview = substr($response->body(), 0, 200);
+                $bodyPreview = substr($response->body(), 0, 2000);
 
                 return new SwissPostApiException(
-                    "Failed to parse Swiss Post API response as JSON. Status: {$response->status()}. Content preview: {$bodyPreview}",
+                    "Postcard API Error {$response->status()} {$bodyPreview}",
                     $response->status(),
                     $senderException
                 );
