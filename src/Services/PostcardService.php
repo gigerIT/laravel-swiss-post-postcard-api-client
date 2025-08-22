@@ -47,7 +47,7 @@ class PostcardService
     /**
      * Upload an image to a postcard
      */
-    public function uploadImage(string $cardKey, string $imagePath, ?string $filename = null, bool $validateDimensions = true): DefaultResponse
+    public function uploadImage(string $cardKey, string $imagePath, bool $validateDimensions = true): DefaultResponse
     {
         if ($validateDimensions) {
             $errors = PostcardValidator::validateImageDimensions($imagePath, ImageDimensions::FRONT_IMAGE);
@@ -56,7 +56,7 @@ class PostcardService
             }
         }
 
-        $request = new UploadImageRequest($cardKey, $imagePath, $filename);
+        $request = new UploadImageRequest($cardKey, $imagePath);
         $response = $this->connector->send($request);
 
         return DefaultResponse::fromArray($response->json());
@@ -182,7 +182,7 @@ class PostcardService
         $cardKey = $createResponse->cardKey;
 
         // Upload the image
-        $this->uploadImage($cardKey, $imagePath, $filename);
+        $this->uploadImage($cardKey, $imagePath);
 
         return $createResponse;
     }

@@ -17,7 +17,6 @@ class UploadImageRequest extends Request implements HasBody
     public function __construct(
         protected string $cardKey,
         protected string $imagePath,
-        protected ?string $filename = null
     ) {}
 
     public function resolveEndpoint(): string

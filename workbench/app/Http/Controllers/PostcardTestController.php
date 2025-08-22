@@ -394,7 +394,7 @@ class PostcardTestController
             }
 
             // Upload to Swiss Post
-            $this->postcardApi->postcards()->uploadImage($cardKey, $fullPath, $image->getClientOriginalName());
+            $this->postcardApi->postcards()->uploadImage($cardKey, $fullPath);
 
             // Clean up temp file
             Storage::delete($path);
