@@ -1,12 +1,16 @@
 # Changelog
 
-## [1.1.0](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/compare/v1.0.0...v1.1.0) (2025-08-27)
+## [v1.1.0](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/compare/v1.1.0...v1.1.0) - 2025-08-27
 
+### Features
+
+- enhance PostcardMessage and PostcardChannel with branding support
+
+## [1.1.0](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/compare/v1.0.0...v1.1.0) (2025-08-27)
 
 ### Features
 
 * enhance PostcardMessage and PostcardChannel with branding support ([8fa609d](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/commit/8fa609d5767982f89a37516ca14643abe38a5d19))
-
 
 ### Miscellaneous Chores
 
@@ -15,7 +19,6 @@
 * remove testbench commands ([ca4501d](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/commit/ca4501d50c307ee81083272bb9222c5fce5bc33b))
 
 ## 1.0.0 (2025-08-27)
-
 
 ### Features
 
@@ -33,7 +36,6 @@
 * package configured ([0e73896](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/commit/0e738963526da947358726f1caabb3a2b763f03a))
 * **tests:** add branding and stamp images for testing ([140a2d2](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/commit/140a2d210b3099e24cedc935f3712f4161cca7f1))
 
-
 ### Bug Fixes
 
 * : oauth2 ([5ad8de2](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/commit/5ad8de2bcda6960f8d5d6470da53c115b4056c56))
@@ -43,7 +45,6 @@
 * increase body preview length in error messages for SwissPostConnector ([8a630cb](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/commit/8a630cb7cfd209f078fd6d561ca9b4f40b2b489b))
 * remove testbench ([f130d5c](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/commit/f130d5c64f12b06271c47ab22fe5d690d56fdf15))
 * **requests:** implement multipart body handling for branding image and stamp uploads ([51adc31](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/commit/51adc31513d134e78b9153352927e85a1493517e))
-
 
 ### Miscellaneous Chores
 
