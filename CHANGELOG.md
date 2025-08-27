@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.1.0](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/compare/v1.0.0...v1.1.0) (2025-08-27)
+
+
+### Features
+
+* enhance PostcardMessage and PostcardChannel with branding support ([8fa609d](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/commit/8fa609d5767982f89a37516ca14643abe38a5d19))
+
+
+### Miscellaneous Chores
+
+* add orchestra/testbench dependency ([3c3b07e](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/commit/3c3b07e95f124d14812cad6cd0149f2234025653))
+* enhance GitHub Actions workflow for release management ([3ed1c9c](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/commit/3ed1c9c1d9f5c73935ce32a38f43614c8f607044))
+* remove testbench commands ([ca4501d](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/commit/ca4501d50c307ee81083272bb9222c5fce5bc33b))
+
 ## 1.0.0 (2025-08-27)
 
 
