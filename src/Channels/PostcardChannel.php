@@ -44,6 +44,9 @@ class PostcardChannel
                 campaignKey: $message->campaignKey
             );
 
+            // Apply branding if specified
+            $this->applyBranding($response->cardKey, $message);
+
             // Optionally approve the postcard if auto-approve is enabled
             if ($message->autoApprove) {
                 $this->postcardApi->postcards()->approve($response->cardKey);
@@ -128,5 +131,32 @@ class PostcardChannel
         }
 
         return RecipientAddress::fromArray($addressData);
+    }
+
+    /**
+     * Apply branding to the postcard if specified in the message.
+     */
+    protected function applyBranding(string $cardKey, PostcardMessage $message): void
+    {
+        // Apply branding text and QR code if available
+        if ($message->branding) {
+            if ($message->branding->hasBrandingText()) {
+                $this->postcardApi->branding()->uploadText($cardKey, $message->branding->brandingText);
+            }
+
+            if ($message->branding->hasBrandingQRCode()) {
+                $this->postcardApi->branding()->uploadQRCode($cardKey, $message->branding->brandingQRCode);
+            }
+        }
+
+        // Apply branding image if specified
+        if ($message->brandingImagePath) {
+            $this->postcardApi->branding()->uploadImage($cardKey, $message->brandingImagePath);
+        }
+
+        // Apply custom stamp if specified
+        if ($message->brandingStampPath) {
+            $this->postcardApi->branding()->uploadStamp($cardKey, $message->brandingStampPath);
+        }
     }
 }

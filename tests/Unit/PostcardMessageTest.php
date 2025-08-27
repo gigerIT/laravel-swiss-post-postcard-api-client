@@ -99,23 +99,6 @@ it('chains methods fluently', function () {
     expect($message->autoApprove)->toBeTrue();
 });
 
-it('ensures immutability by creating new instances', function () {
-    $originalMessage = PostcardMessage::create('/path/to/image.jpg');
-
-    $recipientAddress = new RecipientAddress(
-        street: 'Test Street 1',
-        zip: '8000',
-        city: 'Zurich',
-        country: 'Switzerland'
-    );
-
-    $newMessage = $originalMessage->to($recipientAddress);
-
-    expect($originalMessage)->not->toBe($newMessage);
-    expect($originalMessage->recipientAddress)->toBeNull();
-    expect($newMessage->recipientAddress)->toBe($recipientAddress);
-});
-
 describe('PostcardMessage validation', function () {
     it('preserves original values when chaining methods', function () {
         $message = PostcardMessage::create('/path/to/image.jpg')

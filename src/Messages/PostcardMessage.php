@@ -4,16 +4,22 @@ namespace Gigerit\PostcardApi\Messages;
 
 use Gigerit\PostcardApi\DTOs\Address\RecipientAddress;
 use Gigerit\PostcardApi\DTOs\Address\SenderAddress;
+use Gigerit\PostcardApi\DTOs\Branding\Branding;
+use Gigerit\PostcardApi\DTOs\Branding\BrandingQRCode;
+use Gigerit\PostcardApi\DTOs\Branding\BrandingText;
 
 class PostcardMessage
 {
     public function __construct(
-        public readonly string $imagePath,
-        public readonly ?RecipientAddress $recipientAddress = null,
-        public readonly ?SenderAddress $senderAddress = null,
-        public readonly ?string $senderText = null,
-        public readonly ?string $campaignKey = null,
-        public readonly bool $autoApprove = false
+        public string $imagePath,
+        public ?RecipientAddress $recipientAddress = null,
+        public ?SenderAddress $senderAddress = null,
+        public ?string $senderText = null,
+        public ?string $campaignKey = null,
+        public bool $autoApprove = false,
+        public ?Branding $branding = null,
+        public ?string $brandingImagePath = null,
+        public ?string $brandingStampPath = null
     ) {}
 
     /**
@@ -21,14 +27,9 @@ class PostcardMessage
      */
     public function to(RecipientAddress $address): self
     {
-        return new self(
-            imagePath: $this->imagePath,
-            recipientAddress: $address,
-            senderAddress: $this->senderAddress,
-            senderText: $this->senderText,
-            campaignKey: $this->campaignKey,
-            autoApprove: $this->autoApprove
-        );
+        $this->recipientAddress = $address;
+
+        return $this;
     }
 
     /**
@@ -36,14 +37,9 @@ class PostcardMessage
      */
     public function from(SenderAddress $address): self
     {
-        return new self(
-            imagePath: $this->imagePath,
-            recipientAddress: $this->recipientAddress,
-            senderAddress: $address,
-            senderText: $this->senderText,
-            campaignKey: $this->campaignKey,
-            autoApprove: $this->autoApprove
-        );
+        $this->senderAddress = $address;
+
+        return $this;
     }
 
     /**
@@ -51,14 +47,9 @@ class PostcardMessage
      */
     public function text(string $text): self
     {
-        return new self(
-            imagePath: $this->imagePath,
-            recipientAddress: $this->recipientAddress,
-            senderAddress: $this->senderAddress,
-            senderText: $text,
-            campaignKey: $this->campaignKey,
-            autoApprove: $this->autoApprove
-        );
+        $this->senderText = $text;
+
+        return $this;
     }
 
     /**
@@ -66,14 +57,9 @@ class PostcardMessage
      */
     public function campaign(string $campaignKey): self
     {
-        return new self(
-            imagePath: $this->imagePath,
-            recipientAddress: $this->recipientAddress,
-            senderAddress: $this->senderAddress,
-            senderText: $this->senderText,
-            campaignKey: $campaignKey,
-            autoApprove: $this->autoApprove
-        );
+        $this->campaignKey = $campaignKey;
+
+        return $this;
     }
 
     /**
@@ -81,14 +67,73 @@ class PostcardMessage
      */
     public function autoApprove(bool $autoApprove = true): self
     {
-        return new self(
-            imagePath: $this->imagePath,
-            recipientAddress: $this->recipientAddress,
-            senderAddress: $this->senderAddress,
-            senderText: $this->senderText,
-            campaignKey: $this->campaignKey,
-            autoApprove: $autoApprove
+        $this->autoApprove = $autoApprove;
+
+        return $this;
+    }
+
+    /**
+     * Set branding for the postcard.
+     */
+    public function withBranding(Branding $branding): self
+    {
+        $this->branding = $branding;
+
+        return $this;
+    }
+
+    /**
+     * Set branding text for the postcard.
+     */
+    public function withBrandingText(string $text, ?string $blockColor = null, ?string $textColor = null): self
+    {
+        $brandingText = new BrandingText($text, $blockColor, $textColor);
+
+        $this->branding = new Branding(
+            brandingText: $brandingText,
+            brandingQRCode: $this->branding?->brandingQRCode
         );
+
+        return $this;
+    }
+
+    /**
+     * Set branding QR code for the postcard.
+     */
+    public function withBrandingQRCode(
+        ?string $encodedText = null,
+        ?string $accompanyingText = null,
+        ?string $blockColor = null,
+        ?string $textColor = null
+    ): self {
+        $brandingQRCode = new BrandingQRCode($encodedText, $accompanyingText, $blockColor, $textColor);
+
+        $this->branding = new Branding(
+            brandingText: $this->branding?->brandingText,
+            brandingQRCode: $brandingQRCode
+        );
+
+        return $this;
+    }
+
+    /**
+     * Set branding image path for the postcard.
+     */
+    public function withBrandingImage(string $brandingImagePath): self
+    {
+        $this->brandingImagePath = $brandingImagePath;
+
+        return $this;
+    }
+
+    /**
+     * Set custom stamp path for the postcard.
+     */
+    public function withCustomStamp(string $brandingStampPath): self
+    {
+        $this->brandingStampPath = $brandingStampPath;
+
+        return $this;
     }
 
     /**
