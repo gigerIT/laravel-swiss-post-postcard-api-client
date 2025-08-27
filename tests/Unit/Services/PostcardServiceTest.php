@@ -119,7 +119,7 @@ describe('PostcardService', function () {
                 MockResponse::make(SampleResponses::successResponse())
             );
 
-            $result = $this->service->uploadImage('test-card-key', $wrongImage, null, false);
+            $result = $this->service->uploadImage('test-card-key', $wrongImage, false);
 
             expect($result)->toBeInstanceOf(DefaultResponse::class);
             $this->mockClient->assertSent(UploadImageRequest::class);

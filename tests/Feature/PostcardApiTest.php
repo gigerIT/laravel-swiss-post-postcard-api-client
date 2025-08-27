@@ -8,10 +8,22 @@ use Gigerit\PostcardApi\PostcardApi;
 use Gigerit\PostcardApi\Services\BrandingService;
 use Gigerit\PostcardApi\Services\CampaignService;
 use Gigerit\PostcardApi\Services\PostcardService;
+use Gigerit\PostcardApi\Tests\Fixtures\SampleResponses;
 use Gigerit\PostcardApi\Tests\TestCase;
+use Illuminate\Support\Facades\Http;
 
 class PostcardApiTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // Mock OAuth2 HTTP requests for all tests
+        Http::fake([
+            'test.auth.example.com/token' => Http::response(SampleResponses::oauthTokenResponse(), 200),
+        ]);
+    }
+
     public function test_can_instantiate_postcard_api()
     {
         $api = new PostcardApi;
