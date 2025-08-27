@@ -4,7 +4,6 @@ on:
   workflow_run:
     workflows:
       - "run-tests"
-      - "PHPStan"
       - "Fix PHP code style issues"
     types:
       - completed
