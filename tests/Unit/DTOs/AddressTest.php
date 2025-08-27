@@ -10,7 +10,7 @@ describe('SenderAddress', function () {
     it('can be created with required fields', function () {
         $address = new SenderAddress(
             street: 'Test Street',
-            zip: '12345',
+            zip: '1234',
             city: 'Test City'
         );
 
