@@ -2,12 +2,16 @@
 
 namespace Gigerit\PostcardApi\Requests\Branding;
 
+use Saloon\Contracts\Body\HasBody;
 use Saloon\Data\MultipartValue;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
+use Saloon\Traits\Body\HasMultipartBody;
 
-class UploadBrandingImageRequest extends Request
+class UploadBrandingImageRequest extends Request implements HasBody
 {
+    use HasMultipartBody;
+
     protected Method $method = Method::PUT;
 
     public function __construct(
@@ -24,7 +28,7 @@ class UploadBrandingImageRequest extends Request
     protected function defaultHeaders(): array
     {
         return [
-            'Content-Type' => 'multipart/form-data',
+            'Content-Type' => 'multipart/form-data; boundary='.$this->body()->getBoundary(),
         ];
     }
 
