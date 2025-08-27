@@ -54,7 +54,7 @@ class WelcomePostcardNotification extends Notification
         // Otherwise, try to build address from notifiable attributes
         if (method_exists($notifiable, 'toArray')) {
             $data = $notifiable->toArray();
-            
+
             if (isset($data['street'], $data['zip'], $data['city'], $data['country'])) {
                 $recipientAddress = new RecipientAddress(
                     street: $data['street'],
@@ -66,7 +66,7 @@ class WelcomePostcardNotification extends Notification
                     company: $data['company'] ?? null,
                     houseNr: $data['house_number'] ?? $data['house_nr'] ?? null
                 );
-                
+
                 return $message->to($recipientAddress)->autoApprove(true);
             }
         }

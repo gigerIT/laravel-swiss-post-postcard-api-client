@@ -8,7 +8,6 @@ use Gigerit\PostcardApi\Connectors\SwissPostConnector;
 use Gigerit\PostcardApi\Services\BrandingService;
 use Gigerit\PostcardApi\Services\CampaignService;
 use Gigerit\PostcardApi\Services\PostcardService;
-use Illuminate\Notifications\ChannelManager;
 use Illuminate\Support\Facades\Notification;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;

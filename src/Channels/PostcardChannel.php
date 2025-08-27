@@ -3,7 +3,6 @@
 namespace Gigerit\PostcardApi\Channels;
 
 use Gigerit\PostcardApi\DTOs\Address\RecipientAddress;
-use Gigerit\PostcardApi\DTOs\Address\SenderAddress;
 use Gigerit\PostcardApi\Exceptions\PostcardNotificationException;
 use Gigerit\PostcardApi\Messages\PostcardMessage;
 use Gigerit\PostcardApi\PostcardApi;
@@ -21,7 +20,7 @@ class PostcardChannel
     public function send(object $notifiable, Notification $notification): void
     {
         // The notification must implement a toPostcard method that returns a PostcardMessage
-        if (!method_exists($notification, 'toPostcard')) {
+        if (! method_exists($notification, 'toPostcard')) {
             throw new PostcardNotificationException('Notification must implement toPostcard method.');
         }
 
@@ -82,6 +81,7 @@ class PostcardChannel
         // Try to build address from common attributes
         if (method_exists($notifiable, 'toArray')) {
             $data = $notifiable->toArray();
+
             return $this->buildRecipientAddressFromArray($data);
         }
 
@@ -110,7 +110,7 @@ class PostcardChannel
         $addressData = [];
         foreach ($mapping as $field => $possibleKeys) {
             foreach ($possibleKeys as $key) {
-                if (isset($data[$key]) && !empty($data[$key])) {
+                if (isset($data[$key]) && ! empty($data[$key])) {
                     $addressData[$field] = $data[$key];
                     break;
                 }
@@ -122,7 +122,7 @@ class PostcardChannel
         foreach ($required as $field) {
             if (empty($addressData[$field])) {
                 throw new PostcardNotificationException(
-                    "Missing required address field: {$field}. Available data: " . implode(', ', array_keys($data))
+                    "Missing required address field: {$field}. Available data: ".implode(', ', array_keys($data))
                 );
             }
         }
