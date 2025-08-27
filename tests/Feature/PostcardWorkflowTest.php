@@ -1,48 +1,32 @@
 <?php
 
-namespace Gigerit\PostcardApi\Tests\Feature;
-
 use Gigerit\PostcardApi\PostcardApi;
 use Gigerit\PostcardApi\Tests\Fixtures\SampleResponses;
 use Gigerit\PostcardApi\Tests\Fixtures\TestData;
-use Gigerit\PostcardApi\Tests\TestCase;
 use Saloon\Http\Faking\MockClient;
 use Saloon\Http\Faking\MockResponse;
 
-class PostcardWorkflowTest extends TestCase
-{
-    private PostcardApi $api;
+beforeEach(function () {
+    $this->api = new PostcardApi('test-token');
+    $this->mockClient = new MockClient;
+    $this->api->connector()->withMockClient($this->mockClient);
 
-    private MockClient $mockClient;
+    // Create test image
+    $this->tempImagePath = tempnam(sys_get_temp_dir(), 'test_image').'.jpg';
+    $image = imagecreate(1819, 1311);
+    imagecolorallocate($image, 255, 255, 255);
+    imagejpeg($image, $this->tempImagePath);
+    imagedestroy($image);
+});
 
-    private string $tempImagePath;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->api = new PostcardApi('test-token');
-        $this->mockClient = new MockClient;
-        $this->api->connector()->withMockClient($this->mockClient);
-
-        // Create test image
-        $this->tempImagePath = tempnam(sys_get_temp_dir(), 'test_image').'.jpg';
-        $image = imagecreate(1819, 1311);
-        imagecolorallocate($image, 255, 255, 255);
-        imagejpeg($image, $this->tempImagePath);
-        imagedestroy($image);
+afterEach(function () {
+    if (file_exists($this->tempImagePath)) {
+        unlink($this->tempImagePath);
     }
+});
 
-    protected function tearDown(): void
-    {
-        if (file_exists($this->tempImagePath)) {
-            unlink($this->tempImagePath);
-        }
-        parent::tearDown();
-    }
-
-    public function test_complete_postcard_creation_workflow()
-    {
+describe('PostcardWorkflow', function () {
+    it('can complete a full postcard creation workflow', function () {
         // Mock all API responses for the workflow
         $this->mockClient->addResponses([
             // Check campaign statistics
@@ -65,8 +49,8 @@ class PostcardWorkflowTest extends TestCase
 
         // 1. Check campaign quota
         $stats = $this->api->campaigns()->getDefaultCampaignStatistics();
-        $this->assertEquals(750, $stats->freeToSendPostcards);
-        $this->assertTrue($stats->getRemainingQuota() > 0);
+        expect($stats->freeToSendPostcards)->toBe(750)
+            ->and($stats->getRemainingQuota())->toBeGreaterThan(0);
 
         // 2. Create postcard
         $recipient = TestData::validRecipientAddress();
@@ -75,53 +59,49 @@ class PostcardWorkflowTest extends TestCase
         $createResult = $this->api->postcards()->create('test-campaign', $postcard);
         $cardKey = $createResult->cardKey;
 
-        $this->assertEquals('test-card-key-123', $cardKey);
-        $this->assertFalse($createResult->hasErrors());
+        expect($cardKey)->toBe('test-card-key-123')
+            ->and($createResult->hasErrors())->toBeFalse();
 
         // 3. Upload image
         $uploadResult = $this->api->postcards()->uploadImage($cardKey, $this->tempImagePath, false);
-        $this->assertFalse($uploadResult->hasErrors());
+        expect($uploadResult->hasErrors())->toBeFalse();
 
         // 4. Upload sender text
         $textResult = $this->api->postcards()->uploadSenderText($cardKey, 'Hello from Switzerland!', false);
-        $this->assertFalse($textResult->hasErrors());
+        expect($textResult->hasErrors())->toBeFalse();
 
         // 5. Add branding
         $brandingResult = $this->api->branding()->addSimpleText($cardKey, 'Your Company', '#FF0000', '#FFFFFF');
-        $this->assertFalse($brandingResult->hasErrors());
+        expect($brandingResult->hasErrors())->toBeFalse();
 
         // 6. Check state
         $state = $this->api->postcards()->getState($cardKey);
-        $this->assertEquals('CREATED', $state->state->state);
+        expect($state->state->state)->toBe('CREATED');
 
         // 7. Approve postcard
         $approveResult = $this->api->postcards()->approve($cardKey);
-        $this->assertFalse($approveResult->hasErrors());
+        expect($approveResult->hasErrors())->toBeFalse();
 
         // 8. Get preview
         $preview = $this->api->postcards()->getPreviewFront($cardKey);
-        $this->assertEquals('image/jpeg', $preview->fileType);
-        $this->assertEquals('front', $preview->side);
+        expect($preview->fileType)->toBe('image/jpeg')
+            ->and($preview->side)->toBe('front');
 
         // Verify all requests were made
         $this->mockClient->assertSentCount(8);
-    }
+    });
 
-    public function test_error_handling_in_workflow()
-    {
+    it('handles errors in workflow correctly', function () {
         // Mock error response
         $this->mockClient->addResponse(
             MockResponse::make(SampleResponses::responseWithErrors(), 400)
         );
 
-        $this->expectException(\Exception::class);
+        expect(fn () => $this->api->postcards()->create('test-campaign'))
+            ->toThrow(\Exception::class);
+    });
 
-        // This should throw an exception due to the error response
-        $this->api->postcards()->create('test-campaign');
-    }
-
-    public function test_warning_handling_in_workflow()
-    {
+    it('handles warnings in workflow correctly', function () {
         // Mock response with warnings
         $this->mockClient->addResponse(
             MockResponse::make(SampleResponses::responseWithWarnings())
@@ -129,28 +109,24 @@ class PostcardWorkflowTest extends TestCase
 
         $result = $this->api->postcards()->create('test-campaign');
 
-        $this->assertTrue($result->hasWarnings());
-        $this->assertFalse($result->hasErrors());
-        $this->assertCount(1, $result->warnings);
-        $this->assertEquals('Image: higher resolution recommended', $result->getWarningMessages()[0]);
-    }
+        expect($result->hasWarnings())->toBeTrue()
+            ->and($result->hasErrors())->toBeFalse()
+            ->and($result->warnings)->toHaveCount(1)
+            ->and($result->getWarningMessages()[0])->toBe('Image: higher resolution recommended');
+    });
 
-    public function test_validation_errors_are_caught_early()
-    {
+    it('catches validation errors early', function () {
         // Test that validation catches errors before making API calls
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Sender text validation failed');
-
-        // This should fail validation before any API call
         $longText = str_repeat('A', 1000); // Too long
-        $this->api->postcards()->uploadSenderText('test-card-key', $longText);
+
+        expect(fn () => $this->api->postcards()->uploadSenderText('test-card-key', $longText))
+            ->toThrow(\InvalidArgumentException::class, 'Sender text validation failed');
 
         // No API calls should have been made
         $this->mockClient->assertSentCount(0);
-    }
+    });
 
-    public function test_image_validation_before_upload()
-    {
+    it('validates images before upload', function () {
         // Create wrong size image
         $wrongImage = tempnam(sys_get_temp_dir(), 'wrong_image').'.jpg';
         $image = imagecreate(100, 100); // Wrong dimensions
@@ -158,21 +134,19 @@ class PostcardWorkflowTest extends TestCase
         imagejpeg($image, $wrongImage);
         imagedestroy($image);
 
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Image validation failed');
-
-        try {
-            $this->api->postcards()->uploadImage('test-card-key', $wrongImage);
-        } finally {
-            unlink($wrongImage);
-        }
+        expect(function () use ($wrongImage) {
+            try {
+                $this->api->postcards()->uploadImage('test-card-key', $wrongImage);
+            } finally {
+                unlink($wrongImage);
+            }
+        })->toThrow(\InvalidArgumentException::class, 'Image validation failed');
 
         // No API calls should have been made
         $this->mockClient->assertSentCount(0);
-    }
+    });
 
-    public function test_campaign_quota_check()
-    {
+    it('checks campaign quota correctly', function () {
         $statisticsResponse = [
             'campaignKey' => 'test-campaign',
             'quota' => 100,
@@ -188,8 +162,8 @@ class PostcardWorkflowTest extends TestCase
 
         $stats = $this->api->campaigns()->getStatistics('test-campaign');
 
-        $this->assertEquals(0, $stats->freeToSendPostcards);
-        $this->assertEquals(100.0, $stats->getUsagePercentage());
-        $this->assertFalse($this->api->campaigns()->hasRemainingQuota('test-campaign'));
-    }
-}
+        expect($stats->freeToSendPostcards)->toBe(0)
+            ->and($stats->getUsagePercentage())->toBe(100.0)
+            ->and($this->api->campaigns()->hasRemainingQuota('test-campaign'))->toBeFalse();
+    });
+});
