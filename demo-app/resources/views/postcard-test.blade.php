@@ -448,10 +448,12 @@
                             </div>
                             <div x-show="stepOpen.upload" x-collapse>
                                 <div class="p-6">
-                                    <div x-show="!currentCard" class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg mb-6">
+                                    <div x-show="!currentCard"
+                                        class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg mb-6">
                                         <div class="flex items-center">
                                             <i class="fas fa-info-circle text-yellow-600 mr-2"></i>
-                                            <span class="text-yellow-800">Create a postcard first (Step 1) before uploading an image.</span>
+                                            <span class="text-yellow-800">Create a postcard first (Step 1) before
+                                                uploading an image.</span>
                                         </div>
                                     </div>
 
@@ -459,12 +461,15 @@
                                         <form @submit.prevent="uploadImage()">
                                             <div class="space-y-4">
                                                 <div>
-                                                    <label class="block text-sm font-medium text-gray-700 mb-2">Image (1819×1311 px) *</label>
-                                                    <input type="file" x-ref="stepByStepImage" accept="image/jpeg,image/png" required
+                                                    <label class="block text-sm font-medium text-gray-700 mb-2">Image
+                                                        (1819×1311 px) *</label>
+                                                    <input type="file" x-ref="stepByStepImage"
+                                                        accept="image/jpeg,image/png" required
                                                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                                                    <p class="text-xs text-gray-500 mt-1">JPEG or PNG, max 10MB. Front side image of your postcard.</p>
+                                                    <p class="text-xs text-gray-500 mt-1">JPEG or PNG, max 10MB. Front
+                                                        side image of your postcard.</p>
                                                 </div>
-                                                
+
                                                 <div class="mt-6 flex justify-end">
                                                     <button type="submit" :disabled="loading || !currentCard"
                                                         class="bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white px-4 py-2 rounded-lg transition-colors">
@@ -475,10 +480,12 @@
                                         </form>
 
                                         <!-- Upload Status -->
-                                        <div x-show="imageUploaded" class="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                                        <div x-show="imageUploaded"
+                                            class="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
                                             <div class="flex items-center">
                                                 <i class="fas fa-check-circle text-green-600 mr-2"></i>
-                                                <span class="font-medium text-green-800">Image uploaded successfully!</span>
+                                                <span class="font-medium text-green-800">Image uploaded
+                                                    successfully!</span>
                                             </div>
                                         </div>
                                     </div>
@@ -503,10 +510,12 @@
                             </div>
                             <div x-show="stepOpen.text" x-collapse>
                                 <div class="p-6">
-                                    <div x-show="!currentCard" class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg mb-6">
+                                    <div x-show="!currentCard"
+                                        class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg mb-6">
                                         <div class="flex items-center">
                                             <i class="fas fa-info-circle text-yellow-600 mr-2"></i>
-                                            <span class="text-yellow-800">Create a postcard first (Step 1) before adding text.</span>
+                                            <span class="text-yellow-800">Create a postcard first (Step 1) before adding
+                                                text.</span>
                                         </div>
                                     </div>
 
@@ -514,15 +523,17 @@
                                         <form @submit.prevent="addText()">
                                             <div class="space-y-4">
                                                 <div>
-                                                    <label class="block text-sm font-medium text-gray-700 mb-2">Sender Text *</label>
+                                                    <label class="block text-sm font-medium text-gray-700 mb-2">Sender
+                                                        Text *</label>
                                                     <textarea x-model="stepByStep.senderText" required rows="6"
                                                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                                         placeholder="Your message to the recipient..."></textarea>
                                                     <p class="text-xs text-gray-500 mt-1">
-                                                        Characters: <span x-text="stepByStep.senderText.length"></span>/2000
+                                                        Characters: <span
+                                                            x-text="stepByStep.senderText.length"></span>/2000
                                                     </p>
                                                 </div>
-                                                
+
                                                 <div class="mt-6 flex justify-end">
                                                     <button type="submit" :disabled="loading || !currentCard"
                                                         class="bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 text-white px-4 py-2 rounded-lg transition-colors">
@@ -533,7 +544,8 @@
                                         </form>
 
                                         <!-- Text Added Status -->
-                                        <div x-show="textAdded" class="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                                        <div x-show="textAdded"
+                                            class="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
                                             <div class="flex items-center">
                                                 <i class="fas fa-check-circle text-green-600 mr-2"></i>
                                                 <span class="font-medium text-green-800">Text added successfully!</span>
@@ -561,10 +573,12 @@
                             </div>
                             <div x-show="stepOpen.preview" x-collapse>
                                 <div class="p-6">
-                                    <div x-show="!currentCard" class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg mb-6">
+                                    <div x-show="!currentCard"
+                                        class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg mb-6">
                                         <div class="flex items-center">
                                             <i class="fas fa-info-circle text-yellow-600 mr-2"></i>
-                                            <span class="text-yellow-800">Complete previous steps before previewing and approving.</span>
+                                            <span class="text-yellow-800">Complete previous steps before previewing and
+                                                approving.</span>
                                         </div>
                                     </div>
 
@@ -586,16 +600,19 @@
                                         </div>
 
                                         <!-- Preview Images -->
-                                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" x-show="previewImages.front || previewImages.back">
+                                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6"
+                                            x-show="previewImages.front || previewImages.back">
                                             <div x-show="previewImages.front" class="space-y-2">
                                                 <h4 class="font-medium text-gray-900">Front Preview:</h4>
-                                                <img :src="previewImages.front" alt="Front Preview" 
-                                                    class="w-full h-auto rounded-lg shadow-md border" style="max-height: 300px;">
+                                                <img :src="previewImages.front" alt="Front Preview"
+                                                    class="w-full h-auto rounded-lg shadow-md border"
+                                                    style="max-height: 300px;">
                                             </div>
                                             <div x-show="previewImages.back" class="space-y-2">
                                                 <h4 class="font-medium text-gray-900">Back Preview:</h4>
-                                                <img :src="previewImages.back" alt="Back Preview" 
-                                                    class="w-full h-auto rounded-lg shadow-md border" style="max-height: 300px;">
+                                                <img :src="previewImages.back" alt="Back Preview"
+                                                    class="w-full h-auto rounded-lg shadow-md border"
+                                                    style="max-height: 300px;">
                                             </div>
                                         </div>
 
@@ -603,7 +620,8 @@
                                         <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
                                             <h4 class="font-medium text-gray-900 mb-3">Approve for Printing</h4>
                                             <p class="text-sm text-gray-600 mb-4">
-                                                Once approved, your postcard will be sent to Swiss Post for printing and delivery.
+                                                Once approved, your postcard will be sent to Swiss Post for printing and
+                                                delivery.
                                                 This action cannot be undone.
                                             </p>
                                             <div class="flex space-x-3">
@@ -619,10 +637,12 @@
                                         </div>
 
                                         <!-- Approval Status -->
-                                        <div x-show="postcardApproved" class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                        <div x-show="postcardApproved"
+                                            class="p-4 bg-green-50 border border-green-200 rounded-lg">
                                             <div class="flex items-center">
                                                 <i class="fas fa-check-circle text-green-600 mr-2"></i>
-                                                <span class="font-medium text-green-800">Postcard approved and sent for printing!</span>
+                                                <span class="font-medium text-green-800">Postcard approved and sent for
+                                                    printing!</span>
                                             </div>
                                         </div>
                                     </div>
@@ -780,8 +800,151 @@
                         </div>
 
                         <div x-show="currentCard" class="space-y-6">
-                            <!-- Branding type selector and forms would go here -->
-                            <!-- Similar structure to other forms -->
+                            <!-- Current Card Info -->
+                            <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                                <div class="flex items-center">
+                                    <i class="fas fa-check-circle text-green-600 mr-2"></i>
+                                    <div>
+                                        <p class="font-medium text-green-800">Postcard Available</p>
+                                        <p class="text-sm text-green-600">Card Key: <span x-text="currentCard"
+                                                class="font-mono"></span></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Branding Type Selector -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Branding Type</label>
+                                <select x-model="branding.type" @change="branding.submitted = false"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                    <option value="">Select branding type...</option>
+                                    <option value="text">Text Branding</option>
+                                    <option value="qr">QR Code Branding</option>
+                                    <option value="image">Image Branding</option>
+                                    <option value="stamp">Stamp Branding</option>
+                                </select>
+                            </div>
+
+                            <!-- Text Branding Form -->
+                            <div x-show="branding.type === 'text'" class="border border-gray-200 rounded-lg p-4">
+                                <h3 class="text-lg font-medium text-gray-900 mb-4">Text Branding</h3>
+                                <form @submit.prevent="addBranding()">
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Branding Text
+                                                *</label>
+                                            <textarea x-model="branding.text.text" required rows="3"
+                                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                                placeholder="Enter your branding text..."></textarea>
+                                        </div>
+                                        <div class="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">Block
+                                                    Color</label>
+                                                <input type="color" x-model="branding.text.blockColor"
+                                                    class="w-full h-10 px-1 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">Text
+                                                    Color</label>
+                                                <input type="color" x-model="branding.text.textColor"
+                                                    class="w-full h-10 px-1 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-4">
+                                        <button type="submit" :disabled="loading"
+                                            class="bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 text-white px-4 py-2 rounded-lg transition-colors">
+                                            <i class="fas fa-paint-brush mr-2"></i>Add Text Branding
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- QR Code Branding Form -->
+                            <div x-show="branding.type === 'qr'" class="border border-gray-200 rounded-lg p-4">
+                                <h3 class="text-lg font-medium text-gray-900 mb-4">QR Code Branding</h3>
+                                <form @submit.prevent="addBranding()">
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Encoded Text
+                                                *</label>
+                                            <input type="text" x-model="branding.qr.encodedText" required
+                                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                                placeholder="URL or text to encode in QR code">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Accompanying
+                                                Text</label>
+                                            <input type="text" x-model="branding.qr.accompanyingText"
+                                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                                placeholder="Optional text to display near QR code">
+                                        </div>
+                                    </div>
+                                    <div class="mt-4">
+                                        <button type="submit" :disabled="loading"
+                                            class="bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 text-white px-4 py-2 rounded-lg transition-colors">
+                                            <i class="fas fa-qrcode mr-2"></i>Add QR Code Branding
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- Image Branding Form -->
+                            <div x-show="branding.type === 'image'" class="border border-gray-200 rounded-lg p-4">
+                                <h3 class="text-lg font-medium text-gray-900 mb-4">Image Branding</h3>
+                                <form @submit.prevent="addBranding()">
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Branding Image
+                                                *</label>
+                                            <input type="file" x-ref="brandingImage" accept="image/jpeg,image/png"
+                                                required
+                                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                            <p class="text-xs text-gray-500 mt-1">JPEG or PNG, max 5MB. Will be placed
+                                                as branding element on your postcard.</p>
+                                        </div>
+                                    </div>
+                                    <div class="mt-4">
+                                        <button type="submit" :disabled="loading"
+                                            class="bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 text-white px-4 py-2 rounded-lg transition-colors">
+                                            <i class="fas fa-image mr-2"></i>Add Image Branding
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- Stamp Branding Form -->
+                            <div x-show="branding.type === 'stamp'" class="border border-gray-200 rounded-lg p-4">
+                                <h3 class="text-lg font-medium text-gray-900 mb-4">Stamp Branding</h3>
+                                <form @submit.prevent="addBranding()">
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Stamp Image
+                                                *</label>
+                                            <input type="file" x-ref="brandingStamp" accept="image/jpeg,image/png"
+                                                required
+                                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                            <p class="text-xs text-gray-500 mt-1">JPEG or PNG, max 5MB. Will be used as
+                                                a stamp on your postcard.</p>
+                                        </div>
+                                    </div>
+                                    <div class="mt-4">
+                                        <button type="submit" :disabled="loading"
+                                            class="bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 text-white px-4 py-2 rounded-lg transition-colors">
+                                            <i class="fas fa-stamp mr-2"></i>Add Stamp Branding
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- Branding Added Status -->
+                            <div x-show="branding.submitted" class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <div class="flex items-center">
+                                    <i class="fas fa-check-circle text-green-600 mr-2"></i>
+                                    <span class="font-medium text-green-800">Branding added successfully!</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1074,7 +1237,6 @@
                     create: true,
                     upload: false,
                     text: false,
-                    branding: false,
                     preview: false
                 },
                 quickSend: {
@@ -1107,7 +1269,7 @@
                         houseNr: '15',
                         zip: '4000',
                         city: 'Basel'
-                },
+                    },
                     senderText: 'Hello from the step-by-step postcard creator!'
                 },
                 imageUploaded: false,
@@ -1133,6 +1295,19 @@
                     back: null
                 },
                 previewCardKey: '',
+                branding: {
+                    type: '',
+                    submitted: false,
+                    text: {
+                        text: '',
+                        blockColor: '#000000',
+                        textColor: '#FFFFFF'
+                    },
+                    qr: {
+                        encodedText: '',
+                        accompanyingText: ''
+                    }
+                },
 
                 async makeRequest(url, data = {}, method = 'POST') {
                     const options = {
@@ -1669,7 +1844,7 @@
                         });
 
                         this.postcardApproved = true;
-                        this.showAlert('success', 'Postcard Approved!', 
+                        this.showAlert('success', 'Postcard Approved!',
                             'Your postcard has been approved and sent to Swiss Post for printing and delivery.',
                             JSON.stringify(result.data, null, 2));
                     } catch (error) {
@@ -1709,6 +1884,64 @@
                         console.error(`Failed to load ${side} preview:`, error);
                         if (!error.alreadyHandled) {
                             this.showAlert('error', `Failed to Load ${side.charAt(0).toUpperCase() + side.slice(1)} Preview`, error.message);
+                        }
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+
+                async addBranding() {
+                    if (!this.currentCard) {
+                        this.showAlert('error', 'No Postcard Created', 'Please create a postcard first before adding branding.');
+                        return;
+                    }
+
+                    if (!this.branding.type) {
+                        this.showAlert('error', 'No Branding Type Selected', 'Please select a branding type.');
+                        return;
+                    }
+
+                    try {
+                        this.loading = true;
+
+                        let result;
+
+                        if (this.branding.type === 'text') {
+                            result = await this.makeRequest('/api/test/postcard/add-branding', {
+                                card_key: this.currentCard,
+                                type: 'text',
+                                text: this.branding.text.text,
+                                block_color: this.branding.text.blockColor,
+                                text_color: this.branding.text.textColor
+                            });
+                        } else if (this.branding.type === 'qr') {
+                            result = await this.makeRequest('/api/test/postcard/add-branding', {
+                                card_key: this.currentCard,
+                                type: 'qr',
+                                encoded_text: this.branding.qr.encodedText,
+                                accompanying_text: this.branding.qr.accompanyingText
+                            });
+                        } else if (this.branding.type === 'image' || this.branding.type === 'stamp') {
+                            const formData = new FormData();
+                            formData.append('card_key', this.currentCard);
+                            formData.append('type', this.branding.type);
+
+                            const fileRef = this.branding.type === 'image' ? 'brandingImage' : 'brandingStamp';
+                            if (!this.$refs[fileRef].files[0]) {
+                                throw new Error('Please select an image file');
+                            }
+
+                            formData.append('image', this.$refs[fileRef].files[0]);
+                            result = await this.makeFormRequest('/api/test/postcard/add-branding', formData);
+                        }
+
+                        this.branding.submitted = true;
+                        this.showAlert('success', 'Branding Added!',
+                            `${this.branding.type.charAt(0).toUpperCase() + this.branding.type.slice(1)} branding has been successfully added to your postcard.`);
+                    } catch (error) {
+                        console.error('Failed to add branding:', error);
+                        if (!error.alreadyHandled) {
+                            this.showAlert('error', 'Failed to Add Branding', error.message);
                         }
                     } finally {
                         this.loading = false;
