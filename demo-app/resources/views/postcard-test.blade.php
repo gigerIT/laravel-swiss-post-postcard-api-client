@@ -1811,7 +1811,7 @@
 
                         const result = await this.makeRequest('/api/test/postcard/add-text', {
                             card_key: this.currentCard,
-                            sender_text: this.stepByStep.senderText
+                            text: this.stepByStep.senderText
                         });
 
                         this.textAdded = true;
