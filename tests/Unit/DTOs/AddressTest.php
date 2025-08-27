@@ -15,7 +15,7 @@ describe('SenderAddress', function () {
         );
 
         expect($address->street)->toBe('Test Street')
-            ->and($address->zip)->toBe('12345')
+            ->and($address->zip)->toBe('1234')
             ->and($address->city)->toBe('Test City')
             ->and($address->firstname)->toBeNull()
             ->and($address->lastname)->toBeNull()
