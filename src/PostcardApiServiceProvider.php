@@ -2,11 +2,14 @@
 
 namespace Gigerit\PostcardApi;
 
+use Gigerit\PostcardApi\Channels\PostcardChannel;
 use Gigerit\PostcardApi\Commands\PostcardApiCommand;
 use Gigerit\PostcardApi\Connectors\SwissPostConnector;
 use Gigerit\PostcardApi\Services\BrandingService;
 use Gigerit\PostcardApi\Services\CampaignService;
 use Gigerit\PostcardApi\Services\PostcardService;
+use Illuminate\Notifications\ChannelManager;
+use Illuminate\Support\Facades\Notification;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -48,6 +51,19 @@ class PostcardApiServiceProvider extends PackageServiceProvider
 
         $this->app->singleton(CampaignService::class, function ($app) {
             return new CampaignService($app->make(SwissPostConnector::class));
+        });
+
+        // Register the postcard notification channel
+        $this->app->singleton(PostcardChannel::class, function ($app) {
+            return new PostcardChannel($app->make(PostcardApi::class));
+        });
+    }
+
+    public function packageBooted(): void
+    {
+        // Register the notification channel
+        Notification::extend('postcard', function ($app) {
+            return $app->make(PostcardChannel::class);
         });
     }
 }
