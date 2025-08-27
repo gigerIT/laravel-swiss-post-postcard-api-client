@@ -3,7 +3,6 @@
 namespace Gigerit\PostcardApi;
 
 use Gigerit\PostcardApi\Channels\PostcardChannel;
-use Gigerit\PostcardApi\Commands\PostcardApiCommand;
 use Gigerit\PostcardApi\Connectors\SwissPostConnector;
 use Gigerit\PostcardApi\Services\BrandingService;
 use Gigerit\PostcardApi\Services\CampaignService;
@@ -23,8 +22,7 @@ class PostcardApiServiceProvider extends PackageServiceProvider
          */
         $package
             ->name('laravel-swiss-post-postcard-api-client')
-            ->hasConfigFile('swiss-post-postcard-api-client')
-            ->hasCommand(PostcardApiCommand::class);
+            ->hasConfigFile('swiss-post-postcard-api-client');
     }
 
     public function packageRegistered(): void
