@@ -431,9 +431,204 @@
                             </div>
                         </div>
 
-                        <!-- Additional Steps would go here following similar pattern -->
-                        <!-- Step 2: Upload Image, Step 3: Add Text, Step 4: Preview & Approve -->
-                        <!-- (Content truncated for brevity but would follow similar structure) -->
+                        <!-- Step 2: Upload Image -->
+                        <div class="bg-white rounded-lg shadow-sm border">
+                            <div class="p-6 border-b border-gray-200">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <div
+                                            class="flex-shrink-0 w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center font-medium text-sm">
+                                            2</div>
+                                        <h3 class="ml-3 text-lg font-medium text-gray-900">Upload Image</h3>
+                                    </div>
+                                    <button @click="toggleStep('upload')" class="text-gray-400 hover:text-gray-600">
+                                        <i :class="stepOpen.upload ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div x-show="stepOpen.upload" x-collapse>
+                                <div class="p-6">
+                                    <div x-show="!currentCard" class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg mb-6">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-info-circle text-yellow-600 mr-2"></i>
+                                            <span class="text-yellow-800">Create a postcard first (Step 1) before uploading an image.</span>
+                                        </div>
+                                    </div>
+
+                                    <div x-show="currentCard">
+                                        <form @submit.prevent="uploadImage()">
+                                            <div class="space-y-4">
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 mb-2">Image (1819×1311 px) *</label>
+                                                    <input type="file" x-ref="stepByStepImage" accept="image/jpeg,image/png" required
+                                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                                                    <p class="text-xs text-gray-500 mt-1">JPEG or PNG, max 10MB. Front side image of your postcard.</p>
+                                                </div>
+                                                
+                                                <div class="mt-6 flex justify-end">
+                                                    <button type="submit" :disabled="loading || !currentCard"
+                                                        class="bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white px-4 py-2 rounded-lg transition-colors">
+                                                        <i class="fas fa-upload mr-2"></i>Upload Image
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+
+                                        <!-- Upload Status -->
+                                        <div x-show="imageUploaded" class="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                                            <div class="flex items-center">
+                                                <i class="fas fa-check-circle text-green-600 mr-2"></i>
+                                                <span class="font-medium text-green-800">Image uploaded successfully!</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Add Text -->
+                        <div class="bg-white rounded-lg shadow-sm border">
+                            <div class="p-6 border-b border-gray-200">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <div
+                                            class="flex-shrink-0 w-8 h-8 bg-purple-600 text-white rounded-full flex items-center justify-center font-medium text-sm">
+                                            3</div>
+                                        <h3 class="ml-3 text-lg font-medium text-gray-900">Add Text</h3>
+                                    </div>
+                                    <button @click="toggleStep('text')" class="text-gray-400 hover:text-gray-600">
+                                        <i :class="stepOpen.text ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div x-show="stepOpen.text" x-collapse>
+                                <div class="p-6">
+                                    <div x-show="!currentCard" class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg mb-6">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-info-circle text-yellow-600 mr-2"></i>
+                                            <span class="text-yellow-800">Create a postcard first (Step 1) before adding text.</span>
+                                        </div>
+                                    </div>
+
+                                    <div x-show="currentCard">
+                                        <form @submit.prevent="addText()">
+                                            <div class="space-y-4">
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 mb-2">Sender Text *</label>
+                                                    <textarea x-model="stepByStep.senderText" required rows="6"
+                                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                                        placeholder="Your message to the recipient..."></textarea>
+                                                    <p class="text-xs text-gray-500 mt-1">
+                                                        Characters: <span x-text="stepByStep.senderText.length"></span>/2000
+                                                    </p>
+                                                </div>
+                                                
+                                                <div class="mt-6 flex justify-end">
+                                                    <button type="submit" :disabled="loading || !currentCard"
+                                                        class="bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 text-white px-4 py-2 rounded-lg transition-colors">
+                                                        <i class="fas fa-edit mr-2"></i>Add Text
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+
+                                        <!-- Text Added Status -->
+                                        <div x-show="textAdded" class="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                                            <div class="flex items-center">
+                                                <i class="fas fa-check-circle text-green-600 mr-2"></i>
+                                                <span class="font-medium text-green-800">Text added successfully!</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 4: Preview & Approve -->
+                        <div class="bg-white rounded-lg shadow-sm border">
+                            <div class="p-6 border-b border-gray-200">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <div
+                                            class="flex-shrink-0 w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center font-medium text-sm">
+                                            4</div>
+                                        <h3 class="ml-3 text-lg font-medium text-gray-900">Preview & Approve</h3>
+                                    </div>
+                                    <button @click="toggleStep('preview')" class="text-gray-400 hover:text-gray-600">
+                                        <i :class="stepOpen.preview ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div x-show="stepOpen.preview" x-collapse>
+                                <div class="p-6">
+                                    <div x-show="!currentCard" class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg mb-6">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-info-circle text-yellow-600 mr-2"></i>
+                                            <span class="text-yellow-800">Complete previous steps before previewing and approving.</span>
+                                        </div>
+                                    </div>
+
+                                    <div x-show="currentCard" class="space-y-6">
+                                        <!-- Preview Buttons -->
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <button @click="loadPreview('front')" :disabled="loading"
+                                                class="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white px-4 py-3 rounded-lg font-medium transition-colors">
+                                                <i class="fas fa-image mr-2"></i>
+                                                <span x-show="!loading">Preview Front</span>
+                                                <span x-show="loading">Loading...</span>
+                                            </button>
+                                            <button @click="loadPreview('back')" :disabled="loading"
+                                                class="bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white px-4 py-3 rounded-lg font-medium transition-colors">
+                                                <i class="fas fa-address-card mr-2"></i>
+                                                <span x-show="!loading">Preview Back</span>
+                                                <span x-show="loading">Loading...</span>
+                                            </button>
+                                        </div>
+
+                                        <!-- Preview Images -->
+                                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" x-show="previewImages.front || previewImages.back">
+                                            <div x-show="previewImages.front" class="space-y-2">
+                                                <h4 class="font-medium text-gray-900">Front Preview:</h4>
+                                                <img :src="previewImages.front" alt="Front Preview" 
+                                                    class="w-full h-auto rounded-lg shadow-md border" style="max-height: 300px;">
+                                            </div>
+                                            <div x-show="previewImages.back" class="space-y-2">
+                                                <h4 class="font-medium text-gray-900">Back Preview:</h4>
+                                                <img :src="previewImages.back" alt="Back Preview" 
+                                                    class="w-full h-auto rounded-lg shadow-md border" style="max-height: 300px;">
+                                            </div>
+                                        </div>
+
+                                        <!-- Approve Actions -->
+                                        <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                                            <h4 class="font-medium text-gray-900 mb-3">Approve for Printing</h4>
+                                            <p class="text-sm text-gray-600 mb-4">
+                                                Once approved, your postcard will be sent to Swiss Post for printing and delivery.
+                                                This action cannot be undone.
+                                            </p>
+                                            <div class="flex space-x-3">
+                                                <button @click="approvePostcard()" :disabled="loading || !currentCard"
+                                                    class="bg-red-600 hover:bg-red-700 disabled:bg-gray-400 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+                                                    <i class="fas fa-check-circle mr-2"></i>Approve & Send
+                                                </button>
+                                                <button @click="getPostcardState()" :disabled="loading"
+                                                    class="bg-gray-600 hover:bg-gray-700 disabled:bg-gray-400 text-white px-4 py-2 rounded-lg transition-colors">
+                                                    <i class="fas fa-sync-alt mr-2"></i>Check Status
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Approval Status -->
+                                        <div x-show="postcardApproved" class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                            <div class="flex items-center">
+                                                <i class="fas fa-check-circle text-green-600 mr-2"></i>
+                                                <span class="font-medium text-green-800">Postcard approved and sent for printing!</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -912,8 +1107,12 @@
                         houseNr: '15',
                         zip: '4000',
                         city: 'Basel'
-                    }
                 },
+                    senderText: 'Hello from the step-by-step postcard creator!'
+                },
+                imageUploaded: false,
+                textAdded: false,
+                postcardApproved: false,
                 validation: {
                     address: {
                         firstname: 'John',
@@ -1387,6 +1586,96 @@
                         console.error('Debug validate address failed:', error);
                         if (!error.alreadyHandled) {
                             this.showAlert('error', 'Debug Validate Address Failed', error.message);
+                        }
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+
+                async uploadImage() {
+                    if (!this.currentCard) {
+                        this.showAlert('error', 'No Postcard Created', 'Please create a postcard first before uploading an image.');
+                        return;
+                    }
+
+                    try {
+                        this.loading = true;
+
+                        const formData = new FormData();
+                        formData.append('card_key', this.currentCard);
+
+                        // Check if image is selected
+                        if (!this.$refs.stepByStepImage.files[0]) {
+                            throw new Error('Please select an image file');
+                        }
+
+                        formData.append('image', this.$refs.stepByStepImage.files[0]);
+
+                        const result = await this.makeFormRequest('/api/test/postcard/upload-image', formData);
+
+                        this.imageUploaded = true;
+                        this.showAlert('success', 'Image Uploaded!', 'Your image has been successfully uploaded to the postcard.');
+                    } catch (error) {
+                        console.error('Failed to upload image:', error);
+                        if (!error.alreadyHandled) {
+                            this.showAlert('error', 'Failed to Upload Image', error.message);
+                        }
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+
+                async addText() {
+                    if (!this.currentCard) {
+                        this.showAlert('error', 'No Postcard Created', 'Please create a postcard first before adding text.');
+                        return;
+                    }
+
+                    try {
+                        this.loading = true;
+
+                        const result = await this.makeRequest('/api/test/postcard/add-text', {
+                            card_key: this.currentCard,
+                            sender_text: this.stepByStep.senderText
+                        });
+
+                        this.textAdded = true;
+                        this.showAlert('success', 'Text Added!', 'Your text has been successfully added to the postcard.');
+                    } catch (error) {
+                        console.error('Failed to add text:', error);
+                        if (!error.alreadyHandled) {
+                            this.showAlert('error', 'Failed to Add Text', error.message);
+                        }
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+
+                async approvePostcard() {
+                    if (!this.currentCard) {
+                        this.showAlert('error', 'No Postcard Created', 'Please create a postcard first before approving.');
+                        return;
+                    }
+
+                    if (!confirm('Are you sure you want to approve this postcard for printing? This action cannot be undone and the postcard will be sent to Swiss Post for printing and delivery.')) {
+                        return;
+                    }
+
+                    try {
+                        this.loading = true;
+
+                        const result = await this.makeRequest('/api/test/postcard/approve', {
+                            card_key: this.currentCard
+                        });
+
+                        this.postcardApproved = true;
+                        this.showAlert('success', 'Postcard Approved!', 
+                            'Your postcard has been approved and sent to Swiss Post for printing and delivery.',
+                            JSON.stringify(result.data, null, 2));
+                    } catch (error) {
+                        console.error('Failed to approve postcard:', error);
+                        if (!error.alreadyHandled) {
+                            this.showAlert('error', 'Failed to Approve Postcard', error.message);
                         }
                     } finally {
                         this.loading = false;
