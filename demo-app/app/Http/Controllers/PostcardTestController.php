@@ -574,7 +574,7 @@ class PostcardTestController
             // Store preview image temporarily for display
             $filename = "preview_{$side}_{$cardKey}_{time()}.jpg";
             $path = "previews/{$filename}";
-            Storage::put($path, $preview->getDecodedImage());
+            Storage::disk('public')->put($path, $preview->getDecodedImage());
 
             return response()->json([
                 'success' => true,
