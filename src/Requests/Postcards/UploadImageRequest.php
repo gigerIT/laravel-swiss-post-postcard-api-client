@@ -17,6 +17,7 @@ class UploadImageRequest extends Request implements HasBody
     public function __construct(
         protected string $cardKey,
         protected string $imagePath,
+        protected ?string $filename = null
     ) {}
 
     public function resolveEndpoint(): string
@@ -27,16 +28,17 @@ class UploadImageRequest extends Request implements HasBody
     protected function defaultHeaders(): array
     {
         return [
-            'Content-Type' => 'multipart/form-data',
+            'Content-Type' => 'multipart/form-data; boundary='.$this->body()->getBoundary(),
         ];
     }
 
     protected function defaultBody(): array
     {
         return [
-            new MultipartValue(
+            'image' => new MultipartValue(
                 name: 'image',
                 value: fopen($this->imagePath, 'r'),
+                filename: $this->filename ?? basename($this->imagePath)
             ),
         ];
     }
