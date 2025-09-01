@@ -10,7 +10,7 @@ on:
 permissions: write-all
 
 jobs:
-  php-code-styling:
+  CodeStyle:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -27,10 +27,10 @@ jobs:
         with:
           commit_message: Fix styling
 
-  test:
+  Test:
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    needs: php-code-styling
+    needs: CodeStyle
     strategy:
       fail-fast: true
       matrix:
@@ -70,33 +70,16 @@ jobs:
       - name: Execute tests
         run: vendor/bin/pest --ci
 
-  release-please:
+  Release:
+    needs: [Test]
     runs-on: ubuntu-latest
-    needs: test
-    outputs:
-      release_created: ${{ steps.release.outputs.release_created }}
-      tag_name: ${{ steps.release.outputs.tag_name }}
+    if: "contains(github.event.head_commit.message, 'chore(main): release') || success()"
     steps:
-      - name: release-please-action
-        uses: googleapis/release-please-action@v4.3.0
-        id: release
-        with:
-          release-type: php
-          config-file: .github/release-please-config.json
-          manifest-file: .release-please-manifest.json
-
-  publish:
-    runs-on: ubuntu-latest
-    needs: release-please
-    if: ${{ needs.release-please.outputs.release_created }}
-    steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Create GitHub Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh release create ${{ needs.release-please.outputs.tag_name }} \
-            --title "Release ${{ needs.release-please.outputs.tag_name }}" \
-            --notes "See [CHANGELOG.md](CHANGELOG.md) for details."
+      - name: Release Please
+        uses: googleapis/release-please-action@v4
+        with:
+          release-type: php
+          token: ${{ secrets.GITHUB_TOKEN }}
