@@ -43,12 +43,8 @@ php artisan vendor:publish --tag="swiss-post-postcard-api-client-config"
 Add your Swiss Post API credentials to your `.env` file:
 
 ```env
-SWISS_POST_POSTCARD_API_BASE_URL=https://apiint.post.ch/pcc/
-SWISS_POST_POSTCARD_API_AUTH_URL=https://apiint.post.ch/OAuth/authorization
-SWISS_POST_POSTCARD_API_TOKEN_URL=https://apiint.post.ch/OAuth/token
 SWISS_POST_POSTCARD_API_CLIENT_ID=your_client_id
 SWISS_POST_POSTCARD_API_CLIENT_SECRET=your_client_secret
-SWISS_POST_POSTCARD_API_SCOPE=PCCAPI
 SWISS_POST_POSTCARD_API_DEFAULT_CAMPAIGN=your_campaign_uuid
 ```
 
