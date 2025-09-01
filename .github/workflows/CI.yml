@@ -74,6 +74,10 @@ jobs:
         run: vendor/bin/pest --ci
 
   Release:
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
     needs: [Test]
     runs-on: ubuntu-latest
     if: "github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, 'chore(main): release')"
@@ -84,6 +88,5 @@ jobs:
       - name: Release Please
         uses: googleapis/release-please-action@v4
         with:
-          config-file: .github/release-please-config.json
-          manifest-file: .release-please-manifest.json
+          release-type: php
           token: ${{ secrets.GITHUB_TOKEN }}
