@@ -13,11 +13,11 @@ return [
     |
     */
 
-    'base_url' => env('SWISS_POST_POSTCARD_API_BASE_URL', 'https://apiint.post.ch/pcc/'),
+    'base_url' => env('SWISS_POST_POSTCARD_API_BASE_URL', 'https://api.post.ch/pcc/'),
 
     'oauth' => [
-        'auth_url' => env('SWISS_POST_POSTCARD_API_AUTH_URL', 'https://apiint.post.ch/OAuth/authorization'),
-        'token_url' => env('SWISS_POST_POSTCARD_API_TOKEN_URL', 'https://apiint.post.ch/OAuth/token'),
+        'auth_url' => env('SWISS_POST_POSTCARD_API_AUTH_URL', 'https://api.post.ch/OAuth/authorization'),
+        'token_url' => env('SWISS_POST_POSTCARD_API_TOKEN_URL', 'https://api.post.ch/OAuth/token'),
         'client_id' => env('SWISS_POST_POSTCARD_API_CLIENT_ID'),
         'client_secret' => env('SWISS_POST_POSTCARD_API_CLIENT_SECRET'),
         'scope' => env('SWISS_POST_POSTCARD_API_SCOPE', 'PCCAPI'),
