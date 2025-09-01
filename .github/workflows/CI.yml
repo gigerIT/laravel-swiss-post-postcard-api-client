@@ -7,10 +7,6 @@ on:
       - master
   workflow_dispatch:
 
-permissions:
-  contents: write
-  pull-requests: write
-  issues: write
 
 jobs:
   CodeStyle:
@@ -76,6 +72,10 @@ jobs:
   Release:
     needs: [Test]
     runs-on: ubuntu-latest
+      permissions:
+        contents: write
+        pull-requests: write
+        issues: write
     steps:
       - name: Release Please
         uses: googleapis/release-please-action@v4
