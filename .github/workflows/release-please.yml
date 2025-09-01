@@ -7,10 +7,7 @@ on:
       - master
   workflow_dispatch:
 
-permissions:
-  contents: write
-  pull-requests: write
-  issues: write
+permissions: write-all
 
 jobs:
   php-code-styling:
@@ -44,7 +41,7 @@ jobs:
           - laravel: 12.*
             testbench: 10.6
 
-    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }}
+    name: Test P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }}
 
     steps:
       - name: Checkout code
