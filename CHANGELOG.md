@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.2](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/compare/v1.1.1...v1.1.2) (2025-09-01)
+
+
+### Miscellaneous Chores
+
+* fix CI ([53d902c](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/commit/53d902c056969814552a28b2d866178683c6966b))
+
 ## [1.1.1](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/compare/v1.1.0...v1.1.1) (2025-09-01)
 
 
