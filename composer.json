@@ -1,7 +1,7 @@
 {
     "name": "gigerit/laravel-swiss-post-postcard-api-client",
     "description": "This is my package laravel-swiss-post-postcard-api-client",
-    "version": "1.0.0",
+    "version": "1.1.1",
     "keywords": [
         "gigerIT",
         "laravel",
