@@ -83,7 +83,7 @@ jobs:
     if: "github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, 'chore(main): release')"
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Release Please
         uses: googleapis/release-please-action@v4
