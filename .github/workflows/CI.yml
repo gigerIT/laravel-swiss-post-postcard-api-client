@@ -74,13 +74,13 @@ jobs:
         run: vendor/bin/pest --ci
 
   Release:
+    needs: [Test]
+    if: "github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, 'chore(main): release')"
     permissions:
       contents: write
       issues: write
       pull-requests: write
-    needs: [Test]
     runs-on: ubuntu-latest
-    if: "github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, 'chore(main): release')"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
