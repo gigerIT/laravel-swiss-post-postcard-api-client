@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/compare/v1.1.0...v1.1.1) (2025-09-01)
+
+
+### Bug Fixes
+
+* update README with revised Swiss Post API configuration ([b5509c8](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/commit/b5509c8dbacc2f588156ff5d1f17e12746049681))
+
 ## [v1.1.0](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/compare/v1.1.0...v1.1.0) - 2025-08-27
 
 ### Features
