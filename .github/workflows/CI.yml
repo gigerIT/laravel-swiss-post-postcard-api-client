@@ -89,4 +89,4 @@ jobs:
         uses: googleapis/release-please-action@v4
         with:
           release-type: php
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
