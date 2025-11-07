@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.1.3](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/compare/v1.1.2...v1.1.3) (2025-11-07)
+
+
+### Miscellaneous Chores
+
+* **deps:** bump actions/checkout from 4 to 5 ([5eebe26](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/commit/5eebe26efcf506d183d43894249ac133ea6bcad8))
+* **deps:** bump actions/checkout from 4 to 5 ([39013da](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/commit/39013da0e50a7bd2122b53d5a94aa6866b35379c))
+* **deps:** bump stefanzweifel/git-auto-commit-action from 6 to 7 ([1847d8c](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/commit/1847d8ccf756dc0af564b3dd8393d816ad903f27))
+* **deps:** bump stefanzweifel/git-auto-commit-action from 6 to 7 ([7117972](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/commit/711797230cbfebcfecd1b5ea2cb24ec9eea434f2))
+
 ## [1.1.2](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/compare/v1.1.1...v1.1.2) (2025-09-01)
 
 
