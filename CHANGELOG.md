@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.5](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/compare/v1.1.4...v1.1.5) (2026-01-21)
+
+
+### Bug Fixes
+
+* **PostcardChannel:** enhance error message for invalid PostcardMessage instance ([89b6af7](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/commit/89b6af73244fecda6c24a89ed0fa888b155a571a))
+
+
+### Miscellaneous Chores
+
+* **deps:** bump actions/checkout from 5 to 6 ([a52faa0](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/commit/a52faa0b0392520e0a72631e424db921208d3ecc))
+
 ## [1.1.4](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/compare/v1.1.3...v1.1.4) (2026-01-21)
 
 
