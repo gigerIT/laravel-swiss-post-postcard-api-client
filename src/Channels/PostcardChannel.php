@@ -28,7 +28,9 @@ class PostcardChannel
         $message = $notification->toPostcard($notifiable);
 
         if (! $message instanceof PostcardMessage) {
-            throw new PostcardNotificationException('Notification must return a PostcardMessage instance from toPostcard method, but '.get_class($message).' was returned instead.');
+            $type = is_object($message) ? get_class($message) : gettype($message);
+
+            throw new PostcardNotificationException("Notification must return a PostcardMessage instance from toPostcard method, but {$type} was returned instead.");
         }
 
         try {
