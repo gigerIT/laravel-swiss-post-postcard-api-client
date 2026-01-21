@@ -1,8 +1,7 @@
 # Laravel Swiss Post Postcard API Client
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/gigerit/laravel-swiss-post-postcard-api-client.svg?style=flat-square)](https://packagist.org/packages/gigerit/laravel-swiss-post-postcard-api-client)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/gigerit/laravel-swiss-post-postcard-api-client/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/gigerit/laravel-swiss-post-postcard-api-client/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/gigerit/laravel-swiss-post-postcard-api-client/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/gigerit/laravel-swiss-post-postcard-api-client/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
+[![GitHub CI Action Status](https://img.shields.io/github/actions/workflow/status/gigerit/laravel-swiss-post-postcard-api-client/CI.yml?branch=main&label=CI&style=flat-square)](https://github.com/gigerit/laravel-swiss-post-postcard-api-client/actions?query=workflow%3ACI+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/gigerit/laravel-swiss-post-postcard-api-client.svg?style=flat-square)](https://packagist.org/packages/gigerit/laravel-swiss-post-postcard-api-client)
 
 A Laravel package for sending physical postcards through the Swiss Post Postcard API. This package provides a complete, type-safe wrapper around the Swiss Post Postcard API, allowing you to programmatically send real postcards with images, addresses, branding, and QR codes.
