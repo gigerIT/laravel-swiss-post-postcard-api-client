@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.4](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/compare/v1.1.3...v1.1.4) (2026-01-21)
+
+
+### Miscellaneous Chores
+
+* **deps:** bump dependabot/fetch-metadata from 2.4.0 to 2.5.0 ([0373ad0](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/commit/0373ad0ea50b69083f4f3ff2617ec557e0cae6dd))
+* **deps:** bump dependabot/fetch-metadata from 2.4.0 to 2.5.0 ([708b984](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/commit/708b9845faa31436536f606e3a33ef91795b2a9f))
+
 ## [1.1.3](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/compare/v1.1.2...v1.1.3) (2025-11-07)
 
 
