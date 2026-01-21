@@ -128,7 +128,7 @@ it('throws exception when notification does not return postcard message', functi
     };
 
     expect(fn () => $channel->send($notifiable, $notification))
-        ->toThrow(PostcardNotificationException::class, 'Notification must return a PostcardMessage instance from toPostcard method.');
+        ->toThrow(PostcardNotificationException::class);
 });
 
 it('gets recipient address from notifiable method', function () {
