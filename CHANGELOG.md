@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.1.6](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/compare/v1.1.5...v1.1.6) (2026-03-31)
+
+
+### Bug Fixes
+
+* **deps:** bump saloonphp/saloon dependency from version 3.0 to 4.0 ([45cfb58](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/commit/45cfb589026140be355c90c6ca68083c6cf84f1c))
+* **deps:** update saloonphp/saloon dependency from version 3.0 to 4.0 ([67d8208](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/commit/67d820853dabf757a73fb371b293dd204146ce88))
+
+
+### Miscellaneous Chores
+
+* **deps:** bump dependabot/fetch-metadata from 2.5.0 to 3.0.0 ([ea8df41](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/commit/ea8df412fad90875e00225b1e792e8804924c231))
+* **deps:** bump dependabot/fetch-metadata from 2.5.0 to 3.0.0 ([8e5e36d](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/commit/8e5e36ddf8d97ec3039ae37ee69c1ae21641d4da))
+* **README:** update CI badge to reflect new GitHub Actions workflow ([cf9c8cc](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/commit/cf9c8cc0c102b24b73cc5e9a3dd15c1934ced67d))
+
 ## [1.1.5](https://github.com/gigerIT/laravel-swiss-post-postcard-api-client/compare/v1.1.4...v1.1.5) (2026-01-21)
 
 
