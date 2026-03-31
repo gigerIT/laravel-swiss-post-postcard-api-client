@@ -7,6 +7,7 @@ use Gigerit\PostcardApi\Exceptions\PostcardNotificationException;
 use Gigerit\PostcardApi\Messages\PostcardMessage;
 use Gigerit\PostcardApi\PostcardApi;
 use Gigerit\PostcardApi\Services\PostcardService;
+use Illuminate\Notifications\ChannelManager;
 use Illuminate\Notifications\Notification;
 
 beforeEach(function () {
@@ -31,7 +32,7 @@ it('is registered as notification channel', function () {
     // Check if the channel is registered
     $manager = $this->app->make('Illuminate\Notifications\ChannelManager');
 
-    expect($manager)->toBeInstanceOf(\Illuminate\Notifications\ChannelManager::class);
+    expect($manager)->toBeInstanceOf(ChannelManager::class);
 
     // The channel should be resolvable through the manager
     $channel = $manager->driver('postcard');
@@ -72,7 +73,7 @@ it('sends notification through Laravel notification system', function () {
 
         public function notify($notification)
         {
-            app(\Illuminate\Notifications\ChannelManager::class)
+            app(ChannelManager::class)
                 ->driver('postcard')
                 ->send($this, $notification);
         }
@@ -132,7 +133,7 @@ it('handles notification failures gracefully', function () {
 
         public function notify($notification)
         {
-            app(\Illuminate\Notifications\ChannelManager::class)
+            app(ChannelManager::class)
                 ->driver('postcard')
                 ->send($this, $notification);
         }
@@ -145,7 +146,7 @@ it('handles notification failures gracefully', function () {
 
     $this->postcardService->shouldReceive('createComplete')
         ->once()
-        ->andThrow(new \Exception('API Error'));
+        ->andThrow(new Exception('API Error'));
 
     expect(fn () => $notifiable->notify($notification))
         ->toThrow(PostcardNotificationException::class, 'Failed to send postcard notification');
@@ -204,7 +205,7 @@ it('works with notification facade', function () {
 
     // Send notification through channel manager directly
     expect(function () use ($notifiable, $notification) {
-        app(\Illuminate\Notifications\ChannelManager::class)
+        app(ChannelManager::class)
             ->driver('postcard')
             ->send($notifiable, $notification);
     })->not->toThrow(Exception::class);

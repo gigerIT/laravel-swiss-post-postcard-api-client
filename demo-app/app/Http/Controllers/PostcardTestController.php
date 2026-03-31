@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Gigerit\PostcardApi\DTOs\Address\RecipientAddress;
 use Gigerit\PostcardApi\DTOs\Address\SenderAddress;
+use Gigerit\PostcardApi\DTOs\Postcard\Postcard;
 use Gigerit\PostcardApi\Enums\ImageDimensions;
 use Gigerit\PostcardApi\Exceptions\SwissPostApiException;
 use Gigerit\PostcardApi\PostcardApi as PostcardApiInstance;
@@ -331,7 +332,7 @@ class PostcardTestController
                 );
             }
 
-            $postcard = new \Gigerit\PostcardApi\DTOs\Postcard\Postcard(
+            $postcard = new Postcard(
                 recipientAddress: $recipient,
                 senderAddress: $sender
             );
@@ -803,7 +804,7 @@ class PostcardTestController
                 houseNr: $recipientData['houseNr']
             );
 
-            $postcard = new \Gigerit\PostcardApi\DTOs\Postcard\Postcard(
+            $postcard = new Postcard(
                 recipientAddress: $recipient
             );
 
