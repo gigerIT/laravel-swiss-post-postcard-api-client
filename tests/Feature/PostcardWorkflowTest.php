@@ -98,7 +98,7 @@ describe('PostcardWorkflow', function () {
         );
 
         expect(fn () => $this->api->postcards()->create('test-campaign'))
-            ->toThrow(\Exception::class);
+            ->toThrow(Exception::class);
     });
 
     it('handles warnings in workflow correctly', function () {
@@ -120,7 +120,7 @@ describe('PostcardWorkflow', function () {
         $longText = str_repeat('A', 1000); // Too long
 
         expect(fn () => $this->api->postcards()->uploadSenderText('test-card-key', $longText))
-            ->toThrow(\InvalidArgumentException::class, 'Sender text validation failed');
+            ->toThrow(InvalidArgumentException::class, 'Sender text validation failed');
 
         // No API calls should have been made
         $this->mockClient->assertSentCount(0);
@@ -140,7 +140,7 @@ describe('PostcardWorkflow', function () {
             } finally {
                 unlink($wrongImage);
             }
-        })->toThrow(\InvalidArgumentException::class, 'Image validation failed');
+        })->toThrow(InvalidArgumentException::class, 'Image validation failed');
 
         // No API calls should have been made
         $this->mockClient->assertSentCount(0);

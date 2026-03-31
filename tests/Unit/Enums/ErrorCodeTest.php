@@ -3,6 +3,8 @@
 namespace Gigerit\PostcardApi\Tests\Unit\Enums;
 
 use Gigerit\PostcardApi\Enums\ErrorCode;
+use Gigerit\PostcardApi\Enums\ImageDimensions;
+use Gigerit\PostcardApi\Enums\TextLimits;
 
 describe('ErrorCode', function () {
     it('has correct values for required field errors', function () {
@@ -61,40 +63,40 @@ describe('ErrorCode', function () {
 
 describe('ImageDimensions', function () {
     it('has correct dimension values', function () {
-        expect(\Gigerit\PostcardApi\Enums\ImageDimensions::FRONT_IMAGE->value)->toBe('1819x1311')
-            ->and(\Gigerit\PostcardApi\Enums\ImageDimensions::STAMP_IMAGE->value)->toBe('343x248')
-            ->and(\Gigerit\PostcardApi\Enums\ImageDimensions::BRANDING_IMAGE->value)->toBe('777x295');
+        expect(ImageDimensions::FRONT_IMAGE->value)->toBe('1819x1311')
+            ->and(ImageDimensions::STAMP_IMAGE->value)->toBe('343x248')
+            ->and(ImageDimensions::BRANDING_IMAGE->value)->toBe('777x295');
     });
 
     it('parses width correctly', function () {
-        expect(\Gigerit\PostcardApi\Enums\ImageDimensions::FRONT_IMAGE->getWidth())->toBe(1819)
-            ->and(\Gigerit\PostcardApi\Enums\ImageDimensions::STAMP_IMAGE->getWidth())->toBe(343)
-            ->and(\Gigerit\PostcardApi\Enums\ImageDimensions::BRANDING_IMAGE->getWidth())->toBe(777);
+        expect(ImageDimensions::FRONT_IMAGE->getWidth())->toBe(1819)
+            ->and(ImageDimensions::STAMP_IMAGE->getWidth())->toBe(343)
+            ->and(ImageDimensions::BRANDING_IMAGE->getWidth())->toBe(777);
     });
 
     it('parses height correctly', function () {
-        expect(\Gigerit\PostcardApi\Enums\ImageDimensions::FRONT_IMAGE->getHeight())->toBe(1311)
-            ->and(\Gigerit\PostcardApi\Enums\ImageDimensions::STAMP_IMAGE->getHeight())->toBe(248)
-            ->and(\Gigerit\PostcardApi\Enums\ImageDimensions::BRANDING_IMAGE->getHeight())->toBe(295);
+        expect(ImageDimensions::FRONT_IMAGE->getHeight())->toBe(1311)
+            ->and(ImageDimensions::STAMP_IMAGE->getHeight())->toBe(248)
+            ->and(ImageDimensions::BRANDING_IMAGE->getHeight())->toBe(295);
     });
 
     it('returns dimensions as array', function () {
-        $frontDimensions = \Gigerit\PostcardApi\Enums\ImageDimensions::FRONT_IMAGE->getDimensions();
+        $frontDimensions = ImageDimensions::FRONT_IMAGE->getDimensions();
 
         expect($frontDimensions)->toBe(['width' => 1819, 'height' => 1311]);
     });
 
     it('calculates aspect ratio correctly', function () {
-        $aspectRatio = \Gigerit\PostcardApi\Enums\ImageDimensions::FRONT_IMAGE->getAspectRatio();
+        $aspectRatio = ImageDimensions::FRONT_IMAGE->getAspectRatio();
 
         expect($aspectRatio)->toBeFloat()
             ->and($aspectRatio)->toBe(1819 / 1311);
     });
 
     it('provides static helper methods', function () {
-        $frontDimensions = \Gigerit\PostcardApi\Enums\ImageDimensions::getFrontImageDimensions();
-        $stampDimensions = \Gigerit\PostcardApi\Enums\ImageDimensions::getStampImageDimensions();
-        $brandingDimensions = \Gigerit\PostcardApi\Enums\ImageDimensions::getBrandingImageDimensions();
+        $frontDimensions = ImageDimensions::getFrontImageDimensions();
+        $stampDimensions = ImageDimensions::getStampImageDimensions();
+        $brandingDimensions = ImageDimensions::getBrandingImageDimensions();
 
         expect($frontDimensions)->toBe(['width' => 1819, 'height' => 1311])
             ->and($stampDimensions)->toBe(['width' => 343, 'height' => 248])
@@ -104,26 +106,26 @@ describe('ImageDimensions', function () {
 
 describe('TextLimits', function () {
     it('has correct sender text limits', function () {
-        expect(\Gigerit\PostcardApi\Enums\TextLimits::SENDER_TEXT->getMaxLength())->toBe(900)
-            ->and(\Gigerit\PostcardApi\Enums\TextLimits::SENDER_TEXT->getMinLength())->toBe(0);
+        expect(TextLimits::SENDER_TEXT->getMaxLength())->toBe(900)
+            ->and(TextLimits::SENDER_TEXT->getMinLength())->toBe(0);
     });
 
     it('has correct address field limits', function () {
-        expect(\Gigerit\PostcardApi\Enums\TextLimits::SENDER_ADDRESS_FIRSTNAME->getMaxLength())->toBe(75)
-            ->and(\Gigerit\PostcardApi\Enums\TextLimits::SENDER_ADDRESS_FIRSTNAME->getMinLength())->toBe(2)
-            ->and(\Gigerit\PostcardApi\Enums\TextLimits::SENDER_ADDRESS_ZIP->getMaxLength())->toBe(39)
-            ->and(\Gigerit\PostcardApi\Enums\TextLimits::SENDER_ADDRESS_ZIP->getMinLength())->toBe(4);
+        expect(TextLimits::SENDER_ADDRESS_FIRSTNAME->getMaxLength())->toBe(75)
+            ->and(TextLimits::SENDER_ADDRESS_FIRSTNAME->getMinLength())->toBe(2)
+            ->and(TextLimits::SENDER_ADDRESS_ZIP->getMaxLength())->toBe(39)
+            ->and(TextLimits::SENDER_ADDRESS_ZIP->getMinLength())->toBe(4);
     });
 
     it('has correct branding limits', function () {
-        expect(\Gigerit\PostcardApi\Enums\TextLimits::BRANDING_TEXT_TEXT->getMaxLength())->toBe(250)
-            ->and(\Gigerit\PostcardApi\Enums\TextLimits::BRANDING_QR_ENCODED_TEXT->getMaxLength())->toBe(100)
-            ->and(\Gigerit\PostcardApi\Enums\TextLimits::BRANDING_TEXT_TEXTCOLOR->getMaxLength())->toBe(7)
-            ->and(\Gigerit\PostcardApi\Enums\TextLimits::BRANDING_TEXT_TEXTCOLOR->getMinLength())->toBe(4);
+        expect(TextLimits::BRANDING_TEXT_TEXT->getMaxLength())->toBe(250)
+            ->and(TextLimits::BRANDING_QR_ENCODED_TEXT->getMaxLength())->toBe(100)
+            ->and(TextLimits::BRANDING_TEXT_TEXTCOLOR->getMaxLength())->toBe(7)
+            ->and(TextLimits::BRANDING_TEXT_TEXTCOLOR->getMinLength())->toBe(4);
     });
 
     it('validates text length correctly', function () {
-        $limit = \Gigerit\PostcardApi\Enums\TextLimits::SENDER_TEXT;
+        $limit = TextLimits::SENDER_TEXT;
 
         expect($limit->isValidLength('Hello'))->toBeTrue()
             ->and($limit->isValidLength(''))->toBeTrue() // Min is 0
@@ -132,7 +134,7 @@ describe('TextLimits', function () {
     });
 
     it('provides validation error messages', function () {
-        $limit = \Gigerit\PostcardApi\Enums\TextLimits::SENDER_ADDRESS_FIRSTNAME;
+        $limit = TextLimits::SENDER_ADDRESS_FIRSTNAME;
 
         $tooShort = $limit->validateLength('A', 'test field');
         $tooLong = $limit->validateLength(str_repeat('A', 76), 'test field');
@@ -144,7 +146,7 @@ describe('TextLimits', function () {
     });
 
     it('handles UTF-8 characters correctly', function () {
-        $limit = \Gigerit\PostcardApi\Enums\TextLimits::SENDER_TEXT;
+        $limit = TextLimits::SENDER_TEXT;
         $text = 'Héllo Wörld! 你好'; // Mixed UTF-8 characters
 
         expect($limit->isValidLength($text))->toBeTrue();
