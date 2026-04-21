@@ -20,7 +20,7 @@ A Laravel package for sending physical postcards through the Swiss Post Postcard
 ## Requirements
 
 -   PHP 8.3 or higher
--   Laravel 10.0, 11.0, or 12.0
+-   Laravel 10.0, 11.0, 12.0, or 13.0
 -   Swiss Post Postcard API credentials (obtained through contract with Swiss Post)
 
 ## Installation
