@@ -79,7 +79,7 @@ jobs:
   Release:
     needs: [Test]
     runs-on: ubuntu-latest
-    if: "contains(github.event.head_commit.message, 'chore(main): release') || success()"
+    if: "github.event_name == 'push' && github.ref == 'refs/heads/main' && (contains(github.event.head_commit.message, 'chore(main): release') || success())"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
@@ -88,4 +88,4 @@ jobs:
         uses: googleapis/release-please-action@v5
         with:
           release-type: php
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
